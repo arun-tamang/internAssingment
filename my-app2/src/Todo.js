@@ -5,7 +5,6 @@ import {EditButton, DeleteButton} from './buttons.js';
 export class Todo extends Component {
   constructor (props) {
     super(props);
-    // without super() you get 'this is not allowed before super() error.'
     this.buttonStyle = {
       margin: '10px 10px 10px 0'
     };
@@ -22,11 +21,6 @@ export class Todo extends Component {
     this.EditButnName = 'Edit';
     this.DeleteButnName = 'Delete';
   }
-  // getInitialState () {
-  //   return {
-  //     title: 'my task to do'
-  //   };
-  // }
 
   handleEditClick () {
     this.displayPara = !(this.displayPara);
@@ -56,7 +50,6 @@ export class Todo extends Component {
 
   handleDeleteClick () {
     // you need to remove todo from parent
-    // console.log('handleDeleteClick called');
     console.log('deleting id is .........');
     console.log(this.props.id);
     this.props.handleDelete(this.props.id);

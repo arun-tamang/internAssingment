@@ -4,7 +4,6 @@ import {AddButton} from './buttons';
 export class AddTodoForm extends Component {
   constructor () {
     super();
-    // without super() you get 'this is not allowed before super() error.'
     this.buttonStyle = {
       margin: '10px 10px 10px 0'
     };
@@ -12,7 +11,6 @@ export class AddTodoForm extends Component {
   }
 
   handleClick () {
-    // console.log(this.refs.input.value);
     this.props.handleAddClick(this.refs.input.value);
   }
 

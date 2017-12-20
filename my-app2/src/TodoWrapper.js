@@ -34,14 +34,6 @@ class TodoWrapper extends Component {
     this.pageMetaData = {};
   }
 
-  // getTodoProps () {
-  //   let todoProperties = this.state.todoProps.slice();
-  //   for (let i = 0; i < 2; i++) {
-  //     todoProperties[i] = {key: i, title: 'Random Task'};
-  //   }
-  //   return todoProperties;
-  // }
-
   async downloadTodoProps () {
     let myUrl = 'http://localhost:8848/api/users/' + this.userDetails.id + '/todo';
     let downloadResponse = await axios({
@@ -50,13 +42,11 @@ class TodoWrapper extends Component {
       headers: {'Authorization': this.tokens.accessToken, 'Refresh': this.tokens.refreshToken}
     })
       .then(function (response) {
-        // console.log(response);
         return response;
       })
       .catch(function (error) {
         console.log(error);
       });
-    // console.log(downloadResponse.data);
     return downloadResponse.data;
   }
 
@@ -68,7 +58,6 @@ class TodoWrapper extends Component {
   }
 
   handleAddClick (title) {
-    // console.log('new title: ', title);
     let myUrl = 'http://localhost:8848/api/users/' + this.userDetails.id + '/todo';
     axios({
       method: 'put',
@@ -93,7 +82,6 @@ class TodoWrapper extends Component {
         } else {
           this.setState({todoProps: todoProperties});
         }
-        // this.setState({todoProps: todoProperties});
         return response;
       })
       .catch(function (error) {
@@ -102,11 +90,8 @@ class TodoWrapper extends Component {
   }
 
   getTodoIndex (id) {
-    // console.log(this.state.todos);
     for (let i = 0; i < this.state.todoProps.length; i++) {
-      // console.log('this.state.todoProps.key: ', this.state.todoProps[i].key);
       if (this.state.todoProps[i].key === id) {
-        // console.log('this.state.todoProps.key: ', this.state.todoProps.key);
         return i;
       }
     }
@@ -193,10 +178,8 @@ class TodoWrapper extends Component {
     // that is only given after this post finishes and responds so login should not return before this.
     await axios.post('http://localhost:8848/api/admin/login', userInfo)
     .then((response) => {
-      // console.log(response.data);
       this.tokens = response.data.tokens;
       this.userDetails = response.data.userInfo;
-      // console.log(this.userDetails);
       return response.data;
     })
     .catch(function (error) {
@@ -207,23 +190,17 @@ class TodoWrapper extends Component {
 
   componentWillMount () {
     console.log('will mount called');
-    // let todoProperties = this.getTodoProps();
-    // this.setState({todoProps: todoProperties});
   }
 
   extractTodos (toExtract) {
-    // console.log('toExtract');
-    // console.log(toExtract);
     let todoProperties = [];
     for (let i = 0; i < toExtract.length; i++) {
       todoProperties[i] = {key: toExtract[i].id, title: toExtract[i].name};
     }
-    // this.setState({todoProps: todoProperties});
     return todoProperties;
   }
 
   async refreshAcsToken (lastConfig) {
-    // console.log('refreshAcsToken called............');
     let myUrl = 'http://localhost:8848/api/admin/refresh';
     await axios({
       method: 'post',
@@ -231,31 +208,20 @@ class TodoWrapper extends Component {
       headers: {'Authorization': this.tokens.accessToken, 'Refresh': this.tokens.refreshToken}
     })
     .then(async (response) => {
-      // console.log('from refreshAcsToken');
-      // console.log(response.data);
       this.tokens.accessToken = response.data.accessToken;
       console.log('token refreshed');
-      // console.log(this.tokens.accessToken);
       lastConfig.headers.Authorization = this.tokens.accessToken;
       console.log(lastConfig.headers.Authorization);
-      // return axios(lastConfig).then(response => {
-      //   return response;
-      // });
     });
     let newResponse = await axios(lastConfig);
-    console.log('newResponse');
-    console.log(newResponse);
     return newResponse;
-    // return this.tokens.accessToken;
   }
 
   async fetchTodos () {
     console.log('fetchTodos called');
     let downloadedTodos = await this.downloadTodoProps();
     this.pageMetaData = downloadedTodos.metadata;
-    // console.log('metadata', this.pageMetaData);
     let extractedTodos = this.extractTodos(downloadedTodos.data);
-    // console.log('extractedTodos.length: ', extractedTodos.length);
     this.currentNumTodos = extractedTodos.length;
     this.setState({
       todoProps: extractedTodos
@@ -280,23 +246,17 @@ class TodoWrapper extends Component {
   async firstFetch () {
     console.log('fetchTodos called');
     await this.login(this.userInfo);
-    // this.tokens.accessToken = 'dummy value';
     axios.interceptors.response.use(async (response) => {
-      // Do something with response data
-      // console.log('from interceptor', response);
       if (response.data.acsTokenSuccess === false) {
         console.log('access token needs to be refreshed');
         let lastConfig = response.config;
-        // return this.refreshAndRepeat(lastConfig);
         let returnValue = await this.refreshAcsToken(lastConfig);
         console.log('returnValue');
         console.log(returnValue);
         return returnValue;
       }
-      // console.log('from interceptor', response);
       return response;
     }, (error) => {
-      // Do something with response error
       return Promise.reject(error);
     });
     this.fetchTodos();
@@ -308,7 +268,6 @@ class TodoWrapper extends Component {
   }
 
   render () {
-    // let todos = this.state.todos;
     console.log('render called');
     return (
       <div>
