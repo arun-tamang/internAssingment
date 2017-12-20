@@ -1,0 +1,14 @@
+should i use delete method or post for logout as logout removes data from database?
+
+how to propagate error message of wrong email, password, tokens, etc. without directly
+giving res.send(message) on the spot?
+
+Currently if a user logs in more than once multiple refresh tokens will be stored in the
+database for the same user. So may be add user_id column to check or decode and get user_id
+to check?
+
+Do i need to check if refreshToken is expired and remove automatically from table?
+
+should adding a user_todo item be a put or a post?
+
+When todo is deleted also delete linker table data.
