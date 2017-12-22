@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {EditButton, DeleteButton} from './buttons.js';
+import { EditButton } from '../buttons/EditButton.js';
+import { DeleteButton } from '../buttons/DeleteButton.js';
 // import './style.css';
 
 export class Todo extends Component {
@@ -49,9 +50,6 @@ export class Todo extends Component {
   }
 
   handleDeleteClick () {
-    // you need to remove todo from parent
-    console.log('deleting id is .........');
-    console.log(this.props.id);
     this.props.handleDelete(this.props.id);
   }
 

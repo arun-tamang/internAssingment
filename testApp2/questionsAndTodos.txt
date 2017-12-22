@@ -7,8 +7,10 @@ Currently if a user logs in more than once multiple refresh tokens will be store
 database for the same user. So may be add user_id column to check or decode and get user_id
 to check?
 
-Do i need to check if refreshToken is expired and remove automatically from table?
+Do i need to check if refreshToken is expired and remove automatically from table or should i just verify the refresh token
+and remove the token from table if date is expired?
 
 should adding a user_todo item be a put or a post?
 
-When todo is deleted also delete linker table data.
+my implementation of tags is similar to keyword, but it should be opposite i.e. the more tags you specify the lesser the
+no. of resulting tags should be.
