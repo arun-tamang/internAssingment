@@ -14,10 +14,10 @@ class TodoList extends Component {
       todoProps: []
     };
     this.todos = [];
-    this.userInfo = {'email': 'johnny@bravo.com', 'password': 'password2'};
+    // this.userInfo = {'email': 'johnny@bravo.com', 'password': 'password2'};
     // this.userInfo = {'email': 'jane12@mail.com', 'password': 'password1'};
-    this.tokens = {};
-    this.userDetails = -20;
+    this.tokens = this.props.tokens;
+    this.userDetails = this.props.userDetails;
     this.currentNumTodos = 4;
     this.fetchAfterDelete = false;
     this.fetchAfterAdd = true;
@@ -36,7 +36,7 @@ class TodoList extends Component {
     this.firstFetch = this.firstFetch.bind(this);
     this.fetchTodos = this.fetchTodos.bind(this);
     this.refreshAcsToken = this.refreshAcsToken.bind(this);
-    this.login = this.login.bind(this);
+    // this.login = this.login.bind(this);
   }
 
   setTokenInHeader (tokens) {
@@ -127,6 +127,7 @@ class TodoList extends Component {
   }
 
   fetchTodos () {
+    console.log('from fetchTodos', this.userDetails.id, this.tokens);
     this.downloadTodos(this.userDetails.id, this.tokens)
     .then((downloadedTodos) => {
       this.pageMetaData = downloadedTodos.metadata;
@@ -142,18 +143,18 @@ class TodoList extends Component {
     return SERVICES.refreshAcsToken();
   }
 
-  login (userInfo) {
-    return SERVICES.login(userInfo)
-    .then((response) => {
-      this.tokens = response.data.tokens;
-      this.userDetails = response.data.userInfo;
-      this.setTokenInHeader(this.tokens);
-      this.loggedIn = true;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+  // login (userInfo) {
+  //   return SERVICES.login(userInfo)
+  //   .then((response) => {
+  //     this.tokens = response.data.tokens;
+  //     this.userDetails = response.data.userInfo;
+  //     this.setTokenInHeader(this.tokens);
+  //     this.loggedIn = true;
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  // }
 
   repeatPrevRequest (lastConfig) {
     return myAxios(lastConfig)
@@ -190,11 +191,16 @@ class TodoList extends Component {
   }
 
   firstFetch () {
-    this.login(this.userInfo)
-    .then(() => {
-      this.addInterceptor();
-      this.fetchTodos();
-    });
+    // this.login(this.userInfo)
+    // .then(() => {
+    //   this.addInterceptor();
+    //   this.fetchTodos();
+    // });
+    console.log('first fetch................');
+    console.log(this.props);
+    console.log(this.tokens);
+    this.addInterceptor();
+    this.fetchTodos();
   }
 
   componentDidMount () {
