@@ -1,7 +1,7 @@
 export function getTodoIndex (id, todoProps) {
   // let props = this.state.todoProps;
   for (let i = 0; i < todoProps.length; i++) {
-    if (todoProps[i].key === id) {
+    if (todoProps[i].id === id) {
       return i;
     }
   }
@@ -11,7 +11,10 @@ export function getTodoIndex (id, todoProps) {
 export function extractTodos (toExtract) {
   let todoProperties = [];
   for (let i = 0; i < toExtract.length; i++) {
-    todoProperties[i] = {key: toExtract[i].id, title: toExtract[i].name};
+    todoProperties[i] = {
+      id: toExtract[i].id,
+      title: toExtract[i].name,
+    };
   }
   return todoProperties;
 }

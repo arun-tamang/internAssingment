@@ -1,7 +1,7 @@
 import myAxios from '../../myAxios.js';
 
-export async function login (userInfo) {
-  return myAxios.post('/admin/login', userInfo)
+export async function register (newUserInfo) {
+  return myAxios.post('/admin/register', newUserInfo)
   .then((response) => {
     // console.log(response);
     return {data: response.data, success: true};

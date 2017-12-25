@@ -1,23 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class DeleteButton extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      name: 'Delete'
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
+export const DeleteButton = (props) => {
 
-  handleClick () {
-    this.props.handleClick();
-  }
+  let name = 'Delete';
 
-  render () {
-    return (
-      <button style={this.props.buttonStyle} onClick={this.handleClick}>
-        {this.state.name}
-      </button>
-    );
-  }
+  return (
+    <button style={props.buttonStyle} onClick={props.handleClick}>
+      {name}
+    </button>
+  );
 }

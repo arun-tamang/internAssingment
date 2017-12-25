@@ -35,7 +35,7 @@ const Login = (routerProps, cbLogin, authenticated) => {
   };
 
   let redirect = () => {
-    const { from } = routerProps.location.state || { from: { pathname: '/register' } };
+    const { from } = routerProps.location.state || { from: { pathname: '/' } };
     console.log('redirecting');
     return <Redirect to={from} />;
     // console.log(routerProps);

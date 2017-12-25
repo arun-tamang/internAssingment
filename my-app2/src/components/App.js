@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import '../styles/App.css';
 import TodoList from './todoList/TodoList.js';
-import Home from './Home';
+import Home from './home/HomePage';
 import Login from './forms/Login';
 import Register from './forms/Register';
-// import Todo from './privateTest';
-import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
+import NavBar from './navs/navigation';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { setTokenInHeader } from '../services/axiosService';
 
-// let data = {title: 'hello there'};
 
 class App extends Component {
   constructor (props) {
     super(props);
-    this.handlers = {
-      handleEdit: this.handleEdit.bind(this)
-    };
+    // this.handlers = {
+    //   handleEdit: this.handleEdit.bind(this)
+    // };
     this.state = {
       authenticated: false,
       tokens: '',
@@ -24,11 +23,12 @@ class App extends Component {
     // this.tokens = '';
     // this.userDetails = '';
     this.handleLogIn = this.handleLogIn.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
   }
 
-  handleEdit () {
-    this.setState();
-  }
+  // handleEdit () {
+  //   this.setState();
+  // }
 
   handleLogIn (logResult, receivedData) {
     console.log('back in app');
@@ -40,8 +40,18 @@ class App extends Component {
         userDetails: receivedData.userDetails
       });
     }
-    this.tokens = receivedData.tokens;
-    this.userDetails = receivedData.userDetails;
+    // this.tokens = receivedData.tokens;
+    // this.userDetails = receivedData.userDetails;
+    setTokenInHeader(this.state.tokens);
+  }
+
+  handleLogOut () {
+    console.log('log out back in app');
+    this.setState({
+      authenticated: false,
+      tokens: '',
+      userDetails: ''
+    });
   }
 
   render () {
@@ -49,20 +59,14 @@ class App extends Component {
     return (
       <Router>
         <div className='App'>
-          {/* you need extra wrapper div as router can only have one child element */}
-          <div>
-            <ul>
-              <li><Link to='/'>Home</Link></li>
-              <li><Link to='/login'>Login</Link></li>
-              <li><Link to='/register'>Register</Link></li>
-              <li><Link to='/todo'>Todos</Link></li>
-            </ul>
-          </div>
+          <NavBar authenticated={this.state.authenticated} handleLogOut={this.handleLogOut}/>
           <Route exact path='/' component={Home} />
           <Route path='/login' render={(routerProps) =>
             Login(routerProps, this.handleLogIn, this.state.authenticated)
           } />
-          <Route path='/register' component={Register} />
+          <Route path='/register' render={(routerProps) =>
+            Register(routerProps)
+          } />
           <Route path='/todo' render={(props) => (
             this.state.authenticated ? (
               <TodoList tokens={this.state.tokens} userDetails={this.state.userDetails}/>
@@ -73,16 +77,6 @@ class App extends Component {
               }} />
             )
           )} />
-          {/* <Route path='/todo' render={(props) => (
-            this.state.authenticated ? (
-              Todo(props, data, this.handlers)
-            ) : (
-              <Redirect to={{
-                pathname: '/login',
-                state: { from: props.location }
-              }} />
-            )
-          )} /> */}
         </div>
       </Router>
     );

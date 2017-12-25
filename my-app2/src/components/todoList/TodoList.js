@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import { Todo } from '../todoItem/Todo';
 import { AddTodoForm } from '../forms/AddTodo';
 import { SearchTodoForm } from '../forms/SearchTodo';
+import { PopupEdit } from '../forms/PopUpEdit';
 import myAxios from '../../myAxios';
 
 import SERVICES from '../../services/serviceContainer';
+import { getTodoIndex } from '../../services/todoListService/todoService';
 
 class TodoList extends Component {
   constructor (props) {
     super(props);
     this.state = {
+      showPopUp: false,
       title: 'Your Todos:',
-      todoProps: []
+      todoProps: [],
+      popUpEditTitle: ''
     };
     this.todos = [];
-    // this.userInfo = {'email': 'johnny@bravo.com', 'password': 'password2'};
-    // this.userInfo = {'email': 'jane12@mail.com', 'password': 'password1'};
     this.tokens = this.props.tokens;
     this.userDetails = this.props.userDetails;
     this.currentNumTodos = 4;
@@ -24,7 +26,7 @@ class TodoList extends Component {
     this.pageSize = 5;
     this.pageMetaData = {};
     this.loggedIn = false;
-
+    this.todoToEdit = -1;
     // binding functions
     this.handleAdd = this.handleAdd.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -36,11 +38,14 @@ class TodoList extends Component {
     this.firstFetch = this.firstFetch.bind(this);
     this.fetchTodos = this.fetchTodos.bind(this);
     this.refreshAcsToken = this.refreshAcsToken.bind(this);
+    this.togglePopUp = this.togglePopUp.bind(this);
+    this.closePopUp = this.closePopUp.bind(this);
+    this.setPopUpEditTitle = this.setPopUpEditTitle.bind(this);
     // this.login = this.login.bind(this);
   }
 
   setTokenInHeader (tokens) {
-    myAxios.defaults.headers = {'Authorization': tokens.accessToken, 'Refresh': tokens.refreshToken};
+    SERVICES.setTokenInHeader(tokens);
   }
 
   componentWillMount () {
@@ -53,7 +58,10 @@ class TodoList extends Component {
       let todoProperties = [...this.state.todoProps];
       this.decideFetch(todoProperties);
       let newKey = response.data.id;
-      todoProperties.unshift({key: newKey, title: title});
+      todoProperties.unshift({
+        id: newKey,
+        title: title,
+      });
       this.currentNumTodos++;
       if (this.fetchAfterAdd === true) {
         this.fetchTodos();
@@ -110,16 +118,45 @@ class TodoList extends Component {
     });
   }
 
-  handleEdit (newName, id) {
-    SERVICES.editTodo(newName, id, this.userDetails.id);
+  togglePopUp (title) {
+    this.setState({
+      showPopUp: !this.state.showPopUp,
+      popUpEditTitle: title
+    });
+  }
+
+  setPopUpEditTitle (title) {
+    console.log('setPopUpEditTitle callsed');
+    this.setState({
+      popUpEditTitle: title
+    });
+  }
+
+  handleEdit (title, id) {
+    this.togglePopUp(title);
+    this.todoToEdit = id;
+  }
+
+  closePopUp (title) {
+    let id = this.todoToEdit;
+    SERVICES.editTodo(title, id, this.userDetails.id)
+    .then((response) => {
+      let todoProperties = this.state.todoProps;
+      let index = getTodoIndex(id, todoProperties);
+      todoProperties[index].title = title;
+      this.setState({
+        todoProps: todoProperties
+      });
+    });
+    this.togglePopUp(title);
   }
 
   getTodoIndex (id, todoProps) {
     return SERVICES.todoService.getTodoIndex(id, todoProps);
   }
 
-  downloadTodos (userId, tokens) {
-    return SERVICES.downloadTodos(userId, tokens);
+  downloadTodos (userId) {
+    return SERVICES.downloadTodos(userId);
   }
 
   extractTodos (toExtract) {
@@ -127,8 +164,8 @@ class TodoList extends Component {
   }
 
   fetchTodos () {
-    console.log('from fetchTodos', this.userDetails.id, this.tokens);
-    this.downloadTodos(this.userDetails.id, this.tokens)
+    console.log('from fetchTodos', this.userDetails.id);
+    this.downloadTodos(this.userDetails.id)
     .then((downloadedTodos) => {
       this.pageMetaData = downloadedTodos.metadata;
       let extractedTodos = this.extractTodos(downloadedTodos.data);
@@ -142,19 +179,6 @@ class TodoList extends Component {
   refreshAcsToken () {
     return SERVICES.refreshAcsToken();
   }
-
-  // login (userInfo) {
-  //   return SERVICES.login(userInfo)
-  //   .then((response) => {
-  //     this.tokens = response.data.tokens;
-  //     this.userDetails = response.data.userInfo;
-  //     this.setTokenInHeader(this.tokens);
-  //     this.loggedIn = true;
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-  // }
 
   repeatPrevRequest (lastConfig) {
     return myAxios(lastConfig)
@@ -171,6 +195,7 @@ class TodoList extends Component {
       .then((response) => {
         this.tokens.accessToken = response.data.accessToken;
         console.log('token refreshed');
+        this.setTokenInHeader(this.tokens);
         lastConfig.headers.Authorization = this.tokens.accessToken;
         return this.repeatPrevRequest(lastConfig);
       });
@@ -191,14 +216,7 @@ class TodoList extends Component {
   }
 
   firstFetch () {
-    // this.login(this.userInfo)
-    // .then(() => {
-    //   this.addInterceptor();
-    //   this.fetchTodos();
-    // });
     console.log('first fetch................');
-    console.log(this.props);
-    console.log(this.tokens);
     this.addInterceptor();
     this.fetchTodos();
   }
@@ -212,9 +230,16 @@ class TodoList extends Component {
     console.log('render called');
     return (
       <div>
+        {this.state.showPopUp ? 
+          <PopupEdit 
+          title={this.state.popUpEditTitle}
+          closePopUp={this.closePopUp}
+          changeTitle={this.setPopUpEditTitle} />
+          : null
+        }
         <h2>{this.state.title}</h2>
         {this.state.todoProps
-          .map(item => <Todo key={item.key} id={item.key} title={item.title + ' :id: ' + item.key}
+          .map(item => <Todo key={item.id} id={item.id} title={item.title}
             handleDelete={this.handleDelete} handleEdit={this.handleEdit} />)}
         <AddTodoForm handleAddClick={this.handleAdd} />
         <SearchTodoForm handleSearchClick={this.handleSearch} />

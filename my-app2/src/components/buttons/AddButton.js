@@ -1,18 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class AddButton extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      name: 'Add'
-    };
-  }
+export const AddButton = (props) => {
 
-  render () {
-    return (
-      <button style={this.props.buttonStyle} onClick={this.props.handleClick}>
-        {this.state.name}
+  let name = 'Add';
+
+  return (
+    <button style={props.buttonStyle} onClick={props.handleClick}>
+        {name}
       </button>
-    );
-  }
+  )
 }

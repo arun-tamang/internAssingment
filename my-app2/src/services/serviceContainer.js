@@ -11,6 +11,8 @@ import { downloadTodos } from './resourceService/downloadTodos';
 import { fetchTodos } from './resourceService/fetchTodos';
 import { refreshAcsToken } from './resourceService/refreshAcsToken';
 
+import { setTokenInHeader } from './axiosService';
+
 const SERVICES = {
   addTodo: addTodo,
   deleteTodo: deleteTodo,
@@ -22,7 +24,9 @@ const SERVICES = {
 
   downloadTodos: downloadTodos,
   fetchTodos: fetchTodos,
-  refreshAcsToken: refreshAcsToken
+  refreshAcsToken: refreshAcsToken,
+
+  setTokenInHeader: setTokenInHeader
 };
 
 export default SERVICES;

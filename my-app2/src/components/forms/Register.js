@@ -1,15 +1,17 @@
 import React from 'react';
+import { register } from '../../services/userService/registerService';
+
 
 const Register = () => {
   let userDetails = {
-    firsName: '',
+    firstName: '',
     lastName: '',
     email: '',
     password: ''
   }
 
   let handlefirstNameChange = (e) => {
-    userDetails.firsName = e.target.value;
+    userDetails.firstName = e.target.value;
   }
 
   let handlelastNameChange = (e) => {
@@ -26,6 +28,7 @@ const Register = () => {
 
   let handleRegisterClick = () => {
     console.log(userDetails);
+    register(userDetails);
   }
 
   return(

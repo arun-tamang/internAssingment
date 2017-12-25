@@ -1,32 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export class EditButton extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      name: 'Edit'
-    };
-    this.handleClick = this.handleClick.bind(this);
+export const  EditButton = (props) => {
+
+  let handleClick = () => {
+    props.handleClick();
   }
 
-  toggleName () {
-    if (this.state.name === 'Edit') {
-      this.setState({name: 'Done'});
-    } else {
-      this.setState({name: 'Edit'});
-    }
-  }
+  return (
+    <button style={props.buttonStyle} onClick={handleClick}>
+      {props.name}
+    </button>
+  );
 
-  handleClick () {
-    this.toggleName();
-    this.props.handleClick();
-  }
-
-  render () {
-    return (
-      <button style={this.props.buttonStyle} onClick={this.handleClick}>
-        {this.state.name}
-      </button>
-    );
-  }
 }

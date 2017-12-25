@@ -1,2 +1,12 @@
+reduce most components to stateless.
 only use refresh tokens in header if you want to refresh.
 remove use of refs.
+implement registering of new users.
+display message when login fails.
+remove login option after successfully logging in.
+use pop-up for editing.
+user session storage and only set accesstoken in header.
+
+
+
+
