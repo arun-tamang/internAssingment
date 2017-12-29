@@ -19,7 +19,7 @@ router.post('/login', (req, res, next) => {
 
 router.post('/refresh', tokenValidator.validateRefreshToken,
   (req, res, next) => {
-    adminService.refreshAccessToken(req.headers.refresh)
+    adminService.refreshAccessToken(req.headers.authorization)
       .then(accessToken => res.json({ accessToken }))
       .catch(err => next(err));
     // here .then is used does our function automatically become a promise here?

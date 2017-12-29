@@ -12,8 +12,8 @@ export function fetchTokens(params) {
 }
 
 export async function verifyRefreshToken(rfsToken) {
-  // console.log('inside verifyRefreshToken()');
-  // console.log(rfsToken);
+  console.log('inside verifyRefreshToken()');
+  console.log(rfsToken);
   return new RfsTokens().query('where', 'name', '=', rfsToken)
     .fetch()
     .then(refsToken => {

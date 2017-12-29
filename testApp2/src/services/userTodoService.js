@@ -28,7 +28,7 @@ export async function getTodosFromTags(tagArray) {
 }
 
 export async function searchUserTodo(user_id, queries) {
-  let keyArray = queries.keywords.split(',');
+  let keyArray = queries.keywords.split(' ');
   let tagArray = queries.tags.split(',');
   let todoIds = await getTodosFromTags(tagArray);
   let searchByKeys = (qb) => {
@@ -38,22 +38,20 @@ export async function searchUserTodo(user_id, queries) {
     return qb;
   }
   let searchByTodoIds = (qb) => {
-    console.log(todoIds.length);
     for(let i = 0; i < todoIds.length; i++) {
-      console.log(todoIds[i]);
       qb = qb.orWhere('id', '=', todoIds[i]);
     }
     return qb;
   }
   return new UserTodo()
     .query(async function(qb) {
-      qb = searchByKeys(qb);
       qb = searchByTodoIds(qb);
-      qb = qb.where('user_id', '=', user_id);
+      qb = searchByKeys(qb);
+      qb = qb.andWhere('user_id', '=', user_id);
     })
     .orderBy('updated_at', 'DESC')
     .fetchPage({
-      pageSize: 10, // Defaults to 10 if not specified
+      pageSize: 5, // Defaults to 5 if not specified
       page: 1, // Defaults to 1 if not specified
     })
     .then(userTodo => {

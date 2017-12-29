@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import Boom from 'boom';
 
-const TOKEN_EXPIRATION_PERIOD = 10;
+const TOKEN_EXPIRATION_PERIOD = 5;
 const PRIVATE_KEY = 'my very much but not so much private key';
 
 export function generateTokens(data) {

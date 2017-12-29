@@ -7,8 +7,7 @@ export async function validateToken(req, res, next) {
 }
 
 export async function validateRefreshToken(req, res, next) {
-  let token = req.headers.refresh;
-  // console.log(token);
+  let token = req.headers.authorization;
   try{
     let result = await tokenService.verifyRefreshToken(token);
     // console.log('result of tokenService.verifyRefreshToken');
