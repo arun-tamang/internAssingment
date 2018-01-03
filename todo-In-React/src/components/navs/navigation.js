@@ -6,10 +6,11 @@ const NavBar = (props) => {
   // console.log(props);
 
   const handleLogOut = () => {
-    logout().then((data) => {
-      console.log(data);
-      props.handleLogOut();
-    })
+    logout()
+      .then((data) => {
+        console.log(data);
+        props.handleLogOut();
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -17,24 +18,53 @@ const NavBar = (props) => {
 
   if (props.authenticated === false) {
     return (
-      <div>
-        <ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/todo'>Todos</Link></li>
-          <li><Link to='/login'>Login</Link></li>
-          <li><Link to='/register'>Register</Link></li>
-        </ul>
-      </div>
+      <nav className="navbar navbar-inverse">
+        <div className="container">
+          <div className="navbar-header">
+            <Link to="/" className="navbar-brand">
+              WhatToDo?
+            </Link>
+          </div>
+          <ul className="nav navbar-nav">
+            <li>
+              <Link to="/todo">Todos</Link>
+            </li>
+          </ul>
+          <ul className="nav navbar-nav navbar-right">
+            <li>
+              <Link to="/login"><i className='fa fa-user' /> Login</Link>
+            </li>
+            <li>
+              <Link to="/register"><i className='fa fa-user-plus' /> Register</Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
   return (
-    <div>
-      <ul>
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/todo'>Todos</Link></li>
-        <li><Link to='/logout'><button onClick={handleLogOut}>Logout</button></Link></li>
-      </ul>
-    </div>
+    <nav className="navbar navbar-inverse">
+      <div className="container">
+        <div className="navbar-header">
+          <Link to="/" className="navbar-brand">
+            WhatToDo?
+          </Link>
+        </div>
+        <ul className="nav navbar-nav">
+          <li>
+            <Link to="/todo">Todos</Link>
+          </li>
+        </ul>
+        <ul className="nav navbar-nav navbar-right">
+          <li>
+            <Link onClick={handleLogOut} to="/">
+              <i className='fa fa-sign-out' />
+              Logout
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
   );
 };
 

@@ -15,10 +15,11 @@ export function logout(req, res, next) {
   let logoutResult = tokenService.removeRefreshToken(rfsToken);
   // console.log('result of logout from adminService');
   // console.log(logoutResult);
-  if(logoutResult) {
+  if (logoutResult) {
     console.log('successful logout');
     // logoutResult.resolve('Successfully logged out');
   }
+
   return logoutResult;
 }
 
@@ -48,39 +49,41 @@ export function logout(req, res, next) {
 // };
 
 export async function login(req, res, next) {
-  try{
+  try {
     // console.log('in login of userService');
     let loginParams = req.body;
     let validationResult = await userService.validateUser(req.body);
     // validateUser is async function so i got different result when i didn't use await.
-    if(validationResult.validated === true) {
+    if (validationResult.validated === true) {
       // Now you can give token to the client.
       let tokens = await tokenService.fetchTokens(validationResult.userInfo.id);
       tokenService.addRefreshToken(tokens.refreshToken);
-      return {userInfo: validationResult.userInfo, tokens:tokens};
+
+      return { userInfo: validationResult.userInfo, tokens: tokens };
     } else {
       // wrong email or password
-      throw('wrong email or password');
+      throw 'wrong email or password';
     }
-  }catch(e){
+  } catch (e) {
     // handle error here
     console.log('error occurred in login');
     // res.send(e);
-    throw(e);
+    throw e;
   }
 }
 
 export async function refreshAccessToken(token) {
-  try{
+  try {
     let decoded = await tokenService.checkRefreshToken(token);
-    if(!decoded) {
-      throw('refreshToken may have expired');
+    if (!decoded) {
+      throw 'refreshToken may have expired';
     } else {
-      let newAcsToken = await tokenService.fetchAccessToken(decoded.encryptedData);
+      let newAcsToken = await tokenService.fetchAccessToken(
+        decoded.encryptedData
+      );
       return newAcsToken;
     }
-  } catch(err) {
-    throw(err);
+  } catch (err) {
+    throw err;
   }
-
 }

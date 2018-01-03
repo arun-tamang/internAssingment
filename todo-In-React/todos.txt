@@ -7,9 +7,9 @@ front end.
 Currently add from sets value only on change if you put value and add todo, and again press add
 without modifying present todo. So like in search you need extra state variables to store new add
 title.
-Extract refresh to app from TodoList.
 Do something for when refreshToken expires.
 Add status flags: isFetching, isSearching, isEditing, isDeleting. (or waitingForResponse flag).
+make tags dynamic in backend.
 
 
 

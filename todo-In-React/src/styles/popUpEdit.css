@@ -17,5 +17,9 @@
   top: 25%;
   bottom: 25%;
   margin: auto;
-  background: white;
+  height: 30%;
+  background: #ddd6f3; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #faaca8, #ddd6f3);
+  background: linear-gradient(to right, #faaca8, #ddd6f3);
+  text-align: center;
 }

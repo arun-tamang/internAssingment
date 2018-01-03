@@ -16,13 +16,6 @@ export function receiveTokensAndUserDetails (tokens, userDetails) {
   };
 }
 
-// export function receiveUserDetails (userDetails) {
-//   return {
-//     type: 'RECEIVE_USER_DETAILS',
-//     userDetails
-//   };
-// }
-
 export function removeTokensAndUserDetails () {
   return {
     type: 'REMOVE_TOKENS_AND_USERDETAILS'
@@ -47,7 +40,7 @@ export function setLoginPassword (password) {
   return {
     type: 'SET_LOGIN_PASSWORD',
     password
-  }
+  };
 }
 
 // login
@@ -57,7 +50,7 @@ export function login(userInfo) {
     return SERVICES.login(userInfo)
       .then(
         (response) => {
-          console.log('inside then')
+          console.log('inside then');
           let { tokens } = response.data;
           let userDetails = response.data.userInfo;
           SERVICES.setTokenInHeader(tokens);
@@ -82,4 +75,11 @@ export function register(newUserDetails) {
         return response;
       })
   })
+}
+
+export function resetStore(defaultState) {
+  return {
+    type: 'RESET_STORE',
+    defaultState
+  };
 }

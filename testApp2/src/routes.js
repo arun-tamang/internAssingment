@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import swaggerSpec from './utils/swagger';
 import usersController from './controllers/users';
-import todoController from './controllers/todos';
+import tagController from './controllers/tags';
 import userAdminController from './controllers/userAdmin.js';
 
 /**
@@ -25,8 +25,8 @@ router.get('/', (req, res) => {
 
 router.use('/users', usersController);
 
-// router.use('/todos', todoController);
-
 router.use('/admin', userAdminController);
+
+router.use('/tags', tagController);
 
 export default router;

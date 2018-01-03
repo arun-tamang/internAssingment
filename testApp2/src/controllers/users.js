@@ -50,6 +50,7 @@ router.get('/:id/todo', tokenValidator.validateToken, (req, res, next) => {
 // router.use('/:id/todo', userTodoController);
 
 router.get('/:id/todo/search', tokenValidator.validateToken, findUserTodo, (req, res, next) => {
+  console.log('from users', req.query);
   userTodoService
     .searchUserTodo(req.params.id, req.query)
     .then(data => {

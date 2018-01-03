@@ -11,6 +11,7 @@ import { register } from './userService/registerService';
 import { downloadTodos } from './resourceService/downloadTodos';
 import { fetchTodos } from './resourceService/fetchTodos';
 import { refreshAcsToken } from './resourceService/refreshAcsToken';
+import { fetchTags } from './resourceService/fetchTags';
 
 import { setTokenInHeader } from './axiosService';
 
@@ -27,6 +28,7 @@ const SERVICES = {
   downloadTodos,
   fetchTodos,
   refreshAcsToken,
+  fetchTags,
 
   setTokenInHeader
 };

@@ -26,11 +26,28 @@ const setSearchKeywords = (state, action) => {
 };
 
 const setSearchTags = (state, action) => {
-  return {
-    ...state,
-    tags: action.tags
-  };
+  let stateCopy = { ...state };
+  let tagCopy = [...state.tags]
+  let index = tagCopy.indexOf(action.newTag);
+  if( index === -1) {
+    // stateCopy.tags.push(action.newTag);
+    tagCopy.push(action.newTag);
+  } else {
+    // stateCopy.tags.splice(index,1);
+    tagCopy.splice(index, 1);
+  }
+  stateCopy.tags = tagCopy;
+  // console.log('stateCopy', stateCopy);
+  // console.log('state', state);
+  return stateCopy;
 };
+
+const toggleHeight = (state) => {
+  if (state === 0) {
+    return 60;
+  }
+  return 0;
+}
 
 const todoList = (state = [], action) => {
   switch (action.type) {
@@ -53,6 +70,10 @@ const todoList = (state = [], action) => {
       return setTodoProps(state, action);
     case 'SET_TODO_META_DATA':
       return setTodoMetaData(state, action);
+    case 'SET_TAGS':
+      return {
+        ...state, availableTags: action.tags
+      };
     case 'SET_SEARCH_KEYWORDS':
       return {
         ...state,
@@ -63,16 +84,29 @@ const todoList = (state = [], action) => {
         ...state,
         searchValue: setSearchTags(state.searchValue, action)
       };
+    case 'SET_TODO_TO_EDIT':
+      return {
+        ...state,
+        todoToEdit: action.todoId
+      };
     case 'TOGGLE_POPUP':
       return {
         ...state,
         showPopUp: !(state.showPopUp)
       };
+    case 'TOGGLE_ADD_FORM':
+      return {
+        ...state,
+        addFormHeight: toggleHeight(state.addFormHeight)
+      }
     case 'SET_POPUP_EDIT_TITLE':
       return {
         ...state,
         popUpEditTitle: action.title
       }
+    case 'RESET_STORE':
+      console.log('reset store from todoList reducer');
+      return action.defaultState.todoList;
     default:
       return state;
   }

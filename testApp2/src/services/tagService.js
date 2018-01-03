@@ -6,9 +6,9 @@ export function getByTagName(name) {
     .query('where', 'name', '=', name)
     .fetch()
     .then(tag => {
-      if(!tag) {
+      if (!tag) {
         // throw new Boom.notFound('tag not found');
-        throw('tag: ' + name + ' not found')
+        throw 'tag: ' + name + ' not found';
       }
       return tag;
     });
@@ -17,7 +17,7 @@ export function getByTagName(name) {
 export async function getMultipleByTagName(tagArray) {
   let tag;
   let idArray = [];
-  for(let i = 0; i < tagArray.length; i++) {
+  for (let i = 0; i < tagArray.length; i++) {
     tag = await getByTagName(tagArray[i])
       .then(data => {
         // console.log(data.attributes.id);
@@ -29,11 +29,15 @@ export async function getMultipleByTagName(tagArray) {
       });
     // console.log('tag........');
     // console.log(tag);
-    if(tag) {
+    if (tag) {
       idArray.push(tag);
     }
   }
   // console.log('idArray');
   // console.log(idArray);
   return idArray;
+}
+
+export function getAllTags() {
+  return new Tags().fetchAll();
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import '../styles/App.css';
 import TodoListContainer from '../containers/TodoListContainer';
@@ -9,36 +9,32 @@ import NavBar from './navs/navigation';
 import { setTokenInHeader } from '../services/axiosService';
 import myAxios from '../myAxios';
 import { refreshAcsToken } from '../services/resourceService/refreshAcsToken';
+import { defaultState } from '../store';
 
 
-class App extends Component {
-  constructor (props) {
-    super(props);
-    this.handleLogIn = this.handleLogIn.bind(this);
-    this.handleLogOut = this.handleLogOut.bind(this);
-    this.handleRegister = this.handleRegister.bind(this);
-    this.addInterceptor = this.addInterceptor.bind(this);
-  }
+const App = (props) => {
 
-  refreshAndRepeat (lastConfig) {
+  const refreshAndRepeat = (lastConfig) => {
     return refreshAcsToken()
       .then((response) => {
         console.log('token refreshed');
-        // console.log(response.data.accessToken);
         setTokenInHeader(response.data.accessToken);
         lastConfig.headers.Authorization = response.data.accessToken;
-        // return this.repeatPrevRequest(lastConfig);
         return myAxios(lastConfig);
+      })
+      .catch((error) => {
+        console.log('from refreshAndRepeat', error);
+        handleLogOut();
       });
   }
 
-  addInterceptor () {
+  const addInterceptor = () => {
     console.log('now activating interceptor');
     myAxios.interceptors.response.use((response) => {
       if (response.data.acsTokenSuccess === false) {
         console.log('access token needs to be refreshed');
         let lastConfig = response.config;
-        return this.refreshAndRepeat(lastConfig);
+        return refreshAndRepeat(lastConfig);
       }
       return response;
     }, (error) => {
@@ -47,12 +43,9 @@ class App extends Component {
   }
 
 
-  handleLogIn () {
-    // don't pass argument in handleLogIn because first argument passed will be
-    // and event when you don't pass anything. So using default value in vanilla js
-    // with or(||) won't work as first argument will be event by default not undefined
-    // as i used handleLogin on onclick which passes event.
-    this.props.login(this.props.logInDetails)
+  const handleLogIn = () => {
+    console.log('from handleLogin');
+    props.login(props.logInDetails)
       .then((data) => {
         if (data) {
           localStorage.setItem(
@@ -67,17 +60,19 @@ class App extends Component {
             })
           );
           setTokenInHeader(data.tokens);
-          this.addInterceptor();
+          addInterceptor();
         } else {
           console.log('login unsuccessful');
         }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }
 
-  handleLogOut () {
-    console.log('log out back in app');
-    this.props.setAuthentication(false);
-    this.props.removeTokensAndUserDetails();
+  const handleLogOut = () => {
+    props.setAuthentication(false);
+    props.removeTokensAndUserDetails();
     localStorage.setItem(
       'currentUser',
       JSON.stringify({
@@ -85,81 +80,86 @@ class App extends Component {
         authenticated: false
       })
     );
-  }
+    props.resetStore(defaultState);
+  };
 
-  handleRegister (values) {
+  const handleRegister = (values) => {
     // console.log(values);
-    this.props.register(values)
+    props.register(values)
       .then((response) => {
-        console.log('back in app after registering', response);
         if (response) {
           console.log(response.data.data.email);
           console.log(response.data.data.password);
           let { email } = response.data.data;
           let { password } = response.data.data;
-          this.props.setLoginEmail(email);
-          this.props.setLoginPassword(password);
-          this.handleLogIn();
+          props.setLoginEmail(email);
+          props.setLoginPassword(password);
+          handleLogIn();
         }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }
 
-  checkAuthentication() {
-    if (this.props.user.authenticated === true) {
-      this.addInterceptor();
+  const checkAuthentication = () => {
+    if (props.user.authenticated === true) {
+      addInterceptor();
+      props.fetchTodos(props.user.userDetails.id);
+      props.fetchTags(props.user.userDetails.id);
     }
   }
 
-
-  render () {
-    this.checkAuthentication();
-    return (
-      <Router>
-        <div className='App'>
-          <NavBar authenticated={this.props.user.authenticated} handleLogOut={this.handleLogOut} />
-          <Route exact path='/' component={Home} />
-          <Route
-            path='/login'
-            render={routerProps =>
-            Login(
-              routerProps,
-              {
-                setLoginEmail: this.props.setLoginEmail,
-                setLoginPassword: this.props.setLoginPassword,
-                authenticated: this.props.user.authenticated,
-                handleLogClick: this.handleLogIn
-              }
-            )
-          }
-          />
-          <Route
-            path='/register'
-            render={routerProps => (
-              <Register
-                onSubmit={this.handleRegister}
-                routerProps={routerProps}
-                authenticated={this.props.user.authenticated}
-              />
-            )}
-          />
-          <Route
-            path='/todo'
-            render={props => (
-              this.props.user.authenticated ? (
+  checkAuthentication();
+  return (
+    <Router>
+      <div className='App'>
+        <NavBar authenticated={props.user.authenticated} handleLogOut={handleLogOut} />
+        <Route exact path='/' component={Home} />
+        <Route
+          path='/login'
+          render={routerProps =>
+          Login(
+            routerProps,
+            {
+              setLoginEmail: props.setLoginEmail,
+              setLoginPassword: props.setLoginPassword,
+              authenticated: props.user.authenticated,
+              handleLogClick: handleLogIn
+            }
+          )
+        }
+        />
+        <Route
+          path='/register'
+          render={routerProps => (
+            <Register
+              onSubmit={handleRegister}
+              routerProps={routerProps}
+              authenticated={props.user.authenticated}
+            />
+          )}
+        />
+        <Route
+          path='/todo'
+          render={(routerProps) => {
+            return (
+              props.user.authenticated ? (
                 <TodoListContainer />
               ) : (
                 <Redirect to={{
                   pathname: '/login',
-                  state: { from: props.location }
+                  state: { from: routerProps.location }
                 }}
                 />
-            )
-          )}
-          />
-        </div>
-      </Router>
-    );
-  }
-}
+              )
+            );
+          }
+        }
+        />
+      </div>
+    </Router>
+  );
+};
 
 export default App;

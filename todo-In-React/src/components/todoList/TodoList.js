@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Todo } from '../todoItem/Todo';
 import { AddTodoForm } from '../forms/AddTodo';
 import { SearchTodoForm } from '../forms/SearchTodo';
@@ -7,119 +7,127 @@ import { PopupEdit } from '../forms/PopUpEdit';
 import SERVICES from '../../services/serviceContainer';
 import { getTodoIndex } from '../../services/todoListService/todoService';
 
-class TodoList extends Component {
-  constructor (props) {
-    super(props);
-    // binding functions
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.getTodoIndex = this.getTodoIndex.bind(this);
-    this.fetchTodos = this.fetchTodos.bind(this);
-    this.togglePopUp = this.togglePopUp.bind(this);
-    this.closePopUp = this.closePopUp.bind(this);
-    this.setSearchValues = this.setSearchValues.bind(this);
-  }
+const TodoList = (props) => {
+  const fetchTodos = () => {
+    props.fetchTodos(props.userId)
+      .catch((err) => {
+        console.log(err);
+      });;
+  };
 
-  fetchTodos () {
-    this.props.fetchTodos(this.props.userId);
-  }
-
-  componentDidMount () {
-    this.fetchTodos();
-  }
-
-  setSearchValues (newValue, index) {
+  const setSearchValues = (newValue, index) => {
     if (index === 0) {
-      this.props.setSearchKeywords(newValue);
+      props.setSearchKeywords(newValue);
     } else if (index === 1) {
-      this.props.setSearchTags(newValue);
+      props.setSearchTags(newValue);
     }
-  }
+  };
 
-  getTodoIndex (id, todoProps) {
-    return SERVICES.todoService.getTodoIndex(id, todoProps);
-  }
-
-  decideFetch () {
-    if (this.props.todoProps.length === this.props.metadata.pageSize) {
+  const decideFetch = () => {
+    if (props.todoProps.length === props.metadata.pageSize) {
       return true;
     }
     return false;
-  }
+  };
 
-  handleDelete (todoId) {
-    SERVICES.deleteTodo(this.props.userId, todoId)
+  const handleDelete = (todoId) => {
+    SERVICES.deleteTodo(props.userId, todoId)
       .then((response) => {
-        let index = this.getTodoIndex(todoId, this.props.todoProps);
-        if (this.decideFetch() === true) {
-          this.fetchTodos();
+        let index = getTodoIndex(todoId, props.todoProps);
+        if (decideFetch() === true) {
+          fetchTodos();
         } else {
-          this.props.removeTodo(index);
+          props.removeTodo(index);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
-  handleSearch () {
-    this.props.searchTodos(this.props.searchValue, this.props.userId);
-  }
+  const handleSearch = () => {
+    props.searchTodos(props.searchValue, props.userId);
+  };
 
-  togglePopUp (title) {
-    this.props.togglePopUp();
-    this.props.setPopUpEditTitle(title);
-  }
+  const togglePopUp = (title) => {
+    props.togglePopUp();
+    props.setPopUpEditTitle(title);
+  };
 
-  handleEdit (title, id) {
-    this.togglePopUp(title);
-    this.props.todoToEdit = id;
-  }
+  const handleEdit = (title, id) => {
+    togglePopUp(title);
+    props.setTodoToEdit(id);
+  };
 
-  closePopUp (title) {
-    let id = this.props.todoToEdit;
-    SERVICES.editTodo(title, id, this.props.userId)
-      .then((response) => {
-        let index = getTodoIndex(id, this.props.todoProps);
-        this.props.editTodo(title, index);
-      });
-    this.togglePopUp(title);
-  }
+  const closePopUp = (title) => {
+    let id = props.todoToEdit;
+    SERVICES.editTodo(title, id, props.userId).then((response) => {
+      let index = getTodoIndex(id, props.todoProps);
+      props.editTodo(title, index);
+    });
+    togglePopUp(title);
+  };
 
-  handleAdd (title, tags) {
-    SERVICES.addTodo(this.props.userId, title, tags)
+  const handleAdd = (title, tags) => {
+    SERVICES.addTodo(props.userId, title, tags)
       .then((response) => {
         let { id } = response.data;
-        if (this.decideFetch() === true) {
-          this.fetchTodos();
+        if (decideFetch() === true) {
+          fetchTodos();
         } else {
-          this.props.addTodo({ id, title });
+          props.addTodo({ id, title });
         }
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
-  render () {
-    return (
-      <div>
-        {this.props.showPopUp ?
-          <PopupEdit
-            title={this.props.popUpEditTitle}
-            closePopUp={this.closePopUp}
-            changeTitle={this.props.setPopUpEditTitle} />
-            : null
-        }
-        <h2>{this.props.title}</h2>
-        {this.props.todoProps
-          .map(item => <Todo key={item.id} id={item.id} title={item.title}
-            handleDelete={this.handleDelete} handleEdit={this.handleEdit} />)}
-        <AddTodoForm handleAddClick={this.handleAdd} />
-        <SearchTodoForm handleSearchClick={this.handleSearch} handleChange={this.setSearchValues} />
+  const toggleAddFrom = () => {
+    props.toggleAddForm();
+  };
+
+  return (
+    <div>
+      {props.showPopUp ? (
+        <PopupEdit
+          title={props.popUpEditTitle}
+          closePopUp={closePopUp}
+          changeTitle={props.setPopUpEditTitle}
+        />
+      ) : null}
+      <div className='container'>
+        <div className='add-button-container'>
+          <button onClick={toggleAddFrom} className='fa fa-plus' />
+        </div>
+        <div className='add-wrapper'>
+          <AddTodoForm
+            height={props.addFormHeight}
+            handleAddClick={handleAdd}
+          />
+        </div>
+        <div className='todos-container'>
+          <h2 className='todo-header'>{props.title}</h2>
+          <ul className='todo-list'>
+            {props.todoProps.map((item) => (
+              <Todo
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            ))}
+          </ul>
+        </div>
+        <div className='search-wrapper'>
+          <SearchTodoForm
+            handleSearchClick={handleSearch}
+            handleChange={setSearchValues}
+            availableTags={props.availableTags}
+          />
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default TodoList;

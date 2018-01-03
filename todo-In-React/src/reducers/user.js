@@ -40,6 +40,8 @@ const user = (state = [], action) => {
     case 'REMOVE_TOKENS_AND_USERDETAILS':
       console.log('receive tokens and userDetails dispatched');
       return removeTokensAndUserDetails(state);
+    // case 'RESET_STORE':
+    //   return action.defaultState.user;
     default:
       return state;
   }

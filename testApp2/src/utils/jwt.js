@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import Boom from 'boom';
 
-const TOKEN_EXPIRATION_PERIOD = 5;
+const TOKEN_EXPIRATION_PERIOD = 6000;
 const PRIVATE_KEY = 'my very much but not so much private key';
 
 export function generateTokens(data) {
@@ -17,7 +17,7 @@ export function generateAccessToken(data) {
 }
 
 export function generateRefreshToken(data) {
-  return jwt.sign({ encryptedData: data }, PRIVATE_KEY, { expiresIn: (TOKEN_EXPIRATION_PERIOD * 60 * 24)});
+  return jwt.sign({ encryptedData: data }, PRIVATE_KEY, { expiresIn: (TOKEN_EXPIRATION_PERIOD * 3600)});
 }
 
 // export function verifyRefreshToken(token) {

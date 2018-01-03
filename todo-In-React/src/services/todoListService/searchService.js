@@ -2,10 +2,10 @@ import myAxios from '../../myAxios';
 
 export function searchTodo (searchInput, userId) {
   let myUrl = '/users/' + userId + '/todo/search';
-  console.log('searchInput.keywords');
-  console.log(searchInput.keywords);
-  console.log('searchInput.tags');
-  console.log(searchInput.tags);
+  // console.log('searchInput.keywords');
+  // console.log(searchInput.keywords);
+  // console.log('searchInput.tags');
+  // console.log(searchInput.tags);
   return myAxios.get(myUrl, {
     params: {
       keywords: searchInput.keywords,

@@ -1,8 +1,7 @@
 import myAxios from '../../myAxios.js';
 
-export function downloadTodos(id) {
-  // console.log('form downloadTodos', id);
-  let myUrl = '/users/' + id + '/todo';
+export function fetchTags(userId) {
+  let myUrl = '/tags/' + userId;
 
   return myAxios
     .get(myUrl)

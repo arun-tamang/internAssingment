@@ -6,6 +6,8 @@ const logInDetails = (state = [], action) => {
       return { ...state, email: action.email };
     case 'SET_LOGIN_PASSWORD':
       return { ...state, password: action.password };
+    case 'RESET_STORE':
+      return action.defaultState.logInDetails
     default:
       return state;
   }

@@ -7,7 +7,7 @@ import rootReducer from './reducers/index';
 
 const CURRENT_USER = JSON.parse(localStorage.currentUser);
 
-const defaultState = {
+export const defaultState = {
   // default data here
   todoList: {
     showPopUp: false,
@@ -16,9 +16,11 @@ const defaultState = {
     popUpEditTitle: '',
     todoToEdit: -1,
     searchValue: {
-      keywords: '',
-      tags: ''
+      tags: [],
+      keywords: ''
     },
+    addFormHeight: 0,
+    availableTags: [],
     metadata: {}
   },
   user: {
@@ -28,13 +30,7 @@ const defaultState = {
   logInDetails: {
     email: '',
     password: ''
-  },
-  // registerDetails: {
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   password: ''
-  // }
+  }
 };
 
 // const store = createStore(

@@ -1,37 +1,41 @@
 import React from 'react';
+import { TagField } from '../fields/TagField';
 
 export const SearchTodoForm = (props) => {
-  let keywords = '';
-  let tags = '';
-  let buttonStyle = {
-    margin: '10px 10px 10px 0'
-  };
-
   let handleClick = () => {
-    // let processedTagIds = tags.replace(' ', '');
-    // let searchInput = {
-    //   keywords: keywords,
-    //   tags: processedTagIds
-    // };
-    // props.handleChange(keywords, tags);
     props.handleSearchClick();
   };
 
   let handleKeyChange = (event) => {
-    keywords = event.target.value;
-    props.handleChange(keywords, 0);
+    props.handleChange(event.target.value, 0);
   };
 
-  let handleTagChange = (event) => {
-    tags = event.target.value;
-    props.handleChange(tags, 1);
-  };
+  // let handleTagChange = (event) => {
+  //   props.handleChange(event.target.value, 1);
+  // };
+
+  const handleTagClick = (name) => {
+    props.handleChange(name, 1);
+  }
 
   return (
-    <div>
-      <input type='text' placeholder='keywords' onChange={handleKeyChange} />
-      <input type='text' placeholder='tagNames' onChange={handleTagChange} />
-      <button style={buttonStyle} onClick={handleClick}> Search </button>
-    </div>
+    <form style={{ margin: '0 auto' }}>
+      <input
+        className='search-input'
+        type='text'
+        placeholder='keywords'
+        onChange={handleKeyChange}
+      />
+      {/* <input
+      className='form-control'
+      type='text'
+      placeholder='tagNames'
+      onChange={handleTagChange}
+    /> */}
+      <TagField tagArray={props.availableTags} handleCheckBoxClick={handleTagClick}/>
+      <button type='button' className='btn btn-primary' onClick={handleClick}>
+        Search
+      </button>
+    </form>
   );
 };

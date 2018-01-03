@@ -8,7 +8,7 @@ export function getUserTodo(id) {
     .orderBy('updated_at', 'DESC')
     .fetchPage({
       pageSize: 5, // Defaults to 10 if not specified
-      page: 1, // Defaults to 1 if not specified
+      page: 1 // Defaults to 1 if not specified
     })
     .then(userTodo => {
       if(!userTodo) {
@@ -29,7 +29,10 @@ export async function getTodosFromTags(tagArray) {
 
 export async function searchUserTodo(user_id, queries) {
   let keyArray = queries.keywords.split(' ');
-  let tagArray = queries.tags.split(',');
+  // let tagArray = queries.tags.split(',');
+  console.log(queries.tags);
+  let tagArray = queries.tags || [];
+  // if front end sends empty array it will get undefined here and won't work so default empty is used.
   let todoIds = await getTodosFromTags(tagArray);
   let searchByKeys = (qb) => {
     for(let i = 0; i < keyArray.length; i++) {
