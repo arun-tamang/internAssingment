@@ -4,7 +4,7 @@ import * as tokenService from '../services/tokenService';
 export async function validateToken(req, res, next) {
   // console.log('from validate token', req.headers);
   let token = req.headers.authorization;
-  tokenService.verifyAccessToken(token, req, res, next);
+  return tokenService.verifyAccessToken(token, req, res, next);
 }
 
 export async function validateRefreshToken(req, res, next) {

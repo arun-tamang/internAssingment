@@ -3,12 +3,13 @@ import UserTodo from '../models/userTodo.js';
 import * as tagService from './tagService';
 import * as linkerService from './todoTagLinkerService';
 
-export function getUserTodo(id) {
+export function getUserTodo(id, pageNo) {
   return new UserTodo().query('where', 'user_id', '=', id)
     .orderBy('updated_at', 'DESC')
     .fetchPage({
       pageSize: 5, // Defaults to 10 if not specified
-      page: 1 // Defaults to 1 if not specified
+      page: pageNo || 1, // Defaults to 1 if not specified
+      withRelated: ['tags']
     })
     .then(userTodo => {
       if(!userTodo) {
@@ -30,7 +31,7 @@ export async function getTodosFromTags(tagArray) {
 export async function searchUserTodo(user_id, queries) {
   let keyArray = queries.keywords.split(' ');
   // let tagArray = queries.tags.split(',');
-  console.log(queries.tags);
+  console.log('queries.tags', queries.tags);
   let tagArray = queries.tags || [];
   // if front end sends empty array it will get undefined here and won't work so default empty is used.
   let todoIds = await getTodosFromTags(tagArray);
@@ -54,7 +55,7 @@ export async function searchUserTodo(user_id, queries) {
     })
     .orderBy('updated_at', 'DESC')
     .fetchPage({
-      pageSize: 5, // Defaults to 5 if not specified
+      pageSize: 5, // Defaults to 10 if not specified
       page: 1, // Defaults to 1 if not specified
     })
     .then(userTodo => {

@@ -10,6 +10,7 @@ title.
 Do something for when refreshToken expires.
 Add status flags: isFetching, isSearching, isEditing, isDeleting. (or waitingForResponse flag).
 make tags dynamic in backend.
+how will you do pagination with search ? (onclick of page nos. should now request different url)
 
 
 

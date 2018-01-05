@@ -105,7 +105,7 @@ const App = (props) => {
   const checkAuthentication = () => {
     if (props.user.authenticated === true) {
       addInterceptor();
-      props.fetchTodos(props.user.userDetails.id);
+      props.fetchTodos(props.user.userDetails.id, 1);
       props.fetchTags(props.user.userDetails.id);
     }
   }

@@ -75,11 +75,11 @@ export function setTodoToEdit(todoId) {
 }
 
 // fetch todos
-export function fetchTodos(userId) {
+export function fetchTodos(userId, pageNo) {
   // console.log('from fetch action userId', userId);
 
   return (dispatch) => {
-    return SERVICES.downloadTodos(userId).then((downloadedTodos) => {
+    return SERVICES.downloadTodos(userId, pageNo).then((downloadedTodos) => {
       let extractedTodos = SERVICES.todoService.extractTodos(
         downloadedTodos.data
       );
@@ -102,8 +102,8 @@ export function searchTodos(searchValue, userId) {
     console.log('searchValue:', searchValue);
     return SERVICES.searchTodo(searchValue, userId).then(
       (response) => {
-        console.log('search result');
-        console.log(response.data.data);
+        // console.log('search result');
+        // console.log(response.data.data);
         let extractedTodos = SERVICES.todoService.extractTodos(
           response.data.data
         );

@@ -32,12 +32,26 @@ router.get('/:id', tokenValidator.validateToken, (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.get('/:id/todo/search', tokenValidator.validateToken, (req, res, next) => {
+  console.log('from users..............................................', req.query);
+  userTodoService
+    .searchUserTodo(req.params.id, req.query)
+    .then(data => {
+      // paginateTodo(data);
+      res.json({data, metadata: data.pagination});
+    })
+    .catch(err => next(err));
+  // console.log(req.query); // req.query gives object with keys
+});
+// It is crucial that you put search before below .get because it matches /search as well.
+
+
 // Handle requests for user todos.
-router.get('/:id/todo', tokenValidator.validateToken, (req, res, next) => {
+router.get('/:id/todo/:pageNo', tokenValidator.validateToken, (req, res, next) => {
   // console.log('the id is:');
   console.log(req.params.id);
   userTodoService
-    .getUserTodo(req.params.id)
+    .getUserTodo(req.params.id, req.params.pageNo)
     .then(data => {
       // paginateTodo(data);
       console.log('data...........');
@@ -48,18 +62,6 @@ router.get('/:id/todo', tokenValidator.validateToken, (req, res, next) => {
 });
 // Send user todo requests to separate controller.
 // router.use('/:id/todo', userTodoController);
-
-router.get('/:id/todo/search', tokenValidator.validateToken, findUserTodo, (req, res, next) => {
-  console.log('from users', req.query);
-  userTodoService
-    .searchUserTodo(req.params.id, req.query)
-    .then(data => {
-      // paginateTodo(data);
-      res.json({data, metadata: data.pagination});
-    })
-    .catch(err => next(err));
-  // console.log(req.query); // req.query gives object with keys
-});
 
 /**
  * POST /api/users

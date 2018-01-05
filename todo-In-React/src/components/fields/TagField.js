@@ -1,15 +1,18 @@
 import React from 'react';
+// import '../../styles/.css';
+import '../../styles/checkbox-fancy.css';
 
 const TagItem = (props) => {
   return (
     <li>
       <input
+        className='fancy'
         type="checkbox"
         onClick={() => props.handleClick(props.name)}
-        id={props.name}
         value={props.name}
       />
-      <label htmlFor={props.name}>{props.name}</label>
+      {/* <label htmlFor={props.name}>{props.name}</label> */}
+       {props.name}
     </li>
   );
 };
@@ -28,7 +31,6 @@ export const TagField = (props) => {
             key={tagItem.id}
             handleClick={handleClick}
             name={tagItem.name}
-            id={tagItem.id}
           />
         ))}
       </ul>

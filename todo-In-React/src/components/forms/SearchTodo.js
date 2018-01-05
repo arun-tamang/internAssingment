@@ -14,7 +14,8 @@ export const SearchTodoForm = (props) => {
   //   props.handleChange(event.target.value, 1);
   // };
 
-  const handleTagClick = (name) => {
+  const handleSearchTagClick = (name) => {
+    console.log('handle search tag click fired');
     props.handleChange(name, 1);
   }
 
@@ -32,7 +33,7 @@ export const SearchTodoForm = (props) => {
       placeholder='tagNames'
       onChange={handleTagChange}
     /> */}
-      <TagField tagArray={props.availableTags} handleCheckBoxClick={handleTagClick}/>
+      <TagField tagArray={props.availableTags} handleCheckBoxClick={handleSearchTagClick}/>
       <button type='button' className='btn btn-primary' onClick={handleClick}>
         Search
       </button>

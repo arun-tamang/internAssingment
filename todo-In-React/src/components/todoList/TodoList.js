@@ -3,16 +3,16 @@ import { Todo } from '../todoItem/Todo';
 import { AddTodoForm } from '../forms/AddTodo';
 import { SearchTodoForm } from '../forms/SearchTodo';
 import { PopupEdit } from '../forms/PopUpEdit';
+import { Pagination } from '../pagination/Pagination';
 
 import SERVICES from '../../services/serviceContainer';
 import { getTodoIndex } from '../../services/todoListService/todoService';
 
 const TodoList = (props) => {
   const fetchTodos = () => {
-    props.fetchTodos(props.userId)
-      .catch((err) => {
-        console.log(err);
-      });;
+    props.fetchTodos(props.userId).catch((err) => {
+      console.log(err);
+    });
   };
 
   const setSearchValues = (newValue, index) => {
@@ -75,7 +75,7 @@ const TodoList = (props) => {
         if (decideFetch() === true) {
           fetchTodos();
         } else {
-          props.addTodo({ id, title });
+          props.addTodo({ id, title, tags });
         }
       })
       .catch((err) => console.log(err));
@@ -83,6 +83,13 @@ const TodoList = (props) => {
 
   const toggleAddFrom = () => {
     props.toggleAddForm();
+  };
+
+  const setPage = (page) => {
+    // console.log('page', page);
+    if(page > 0 && page <= props.metadata.pageCount && page !== props.metadata.page) {
+      props.fetchTodos(props.userId, page);
+    }
   };
 
   return (
@@ -94,31 +101,44 @@ const TodoList = (props) => {
           changeTitle={props.setPopUpEditTitle}
         />
       ) : null}
-      <div className='container'>
-        <div className='add-button-container'>
-          <button onClick={toggleAddFrom} className='fa fa-plus' />
+      <div className="container">
+        <div className="add-button-container">
+          <button onClick={toggleAddFrom} className="fa fa-plus" />
         </div>
-        <div className='add-wrapper'>
+        <div className="add-wrapper">
           <AddTodoForm
             height={props.addFormHeight}
             handleAddClick={handleAdd}
+            availableTags={props.availableTags}
           />
         </div>
-        <div className='todos-container'>
-          <h2 className='todo-header'>{props.title}</h2>
-          <ul className='todo-list'>
+        <div className="pagination-container">
+          {(Object.keys(props.metadata).length !== 0 &&
+            props.metadata.constructor === Object) ? (
+              <Pagination
+                setPage={setPage}
+                totalPages={props.metadata.pageCount}
+                currentPage={props.metadata.page}
+              />
+            ) : (false)
+          }
+        </div>
+        <div className="todos-container">
+          <h2 className="todo-header">{props.title}</h2>
+          <ul className="todo-list">
             {props.todoProps.map((item) => (
               <Todo
                 key={item.id}
                 id={item.id}
                 title={item.title}
+                tags={item.tags}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
               />
             ))}
           </ul>
         </div>
-        <div className='search-wrapper'>
+        <div className="search-wrapper">
           <SearchTodoForm
             handleSearchClick={handleSearch}
             handleChange={setSearchValues}

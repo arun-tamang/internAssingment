@@ -17,10 +17,14 @@ export const Todo = (props) => {
   };
 
   return (
-    <li className='todo'>
+    <li className="todo">
       <EditButton buttonStyle={buttonStyle} handleClick={handleEditClick} />
       <DeleteButton buttonStyle={buttonStyle} handleClick={handleDeleteClick} />
       <span> {props.title} </span>
+      <ul className="todo-tags-list">
+        <i className="fa fa-tags" />
+        {props.tags.map((tagItem, index) => <li key={index}><a>{tagItem}</a></li>)}
+      </ul>
     </li>
   );
 };
