@@ -74,21 +74,33 @@ export function setTodoToEdit(todoId) {
   };
 }
 
+export function moveTodo(dragIndex, hoverIndex) {
+  return {
+    type: 'MOVE_TODO',
+    dragIndex,
+    hoverIndex
+  };
+}
+
 // fetch todos
 export function fetchTodos(userId, pageNo) {
   // console.log('from fetch action userId', userId);
 
   return (dispatch) => {
-    return SERVICES.downloadTodos(userId, pageNo).then((downloadedTodos) => {
-      let extractedTodos = SERVICES.todoService.extractTodos(
-        downloadedTodos.data
-      );
-      dispatch(setTodoProps(extractedTodos));
-      dispatch(setTodoMetaData(downloadedTodos.metadata));
-    },
-    (err) => {
-      console.log(err);
-    });
+    return SERVICES.downloadTodos(userId, pageNo).then(
+      (downloadedTodos) => {
+        if (downloadedTodos) {
+          let extractedTodos = SERVICES.todoService.extractTodos(
+            downloadedTodos.data
+          );
+          dispatch(setTodoProps(extractedTodos));
+          dispatch(setTodoMetaData(downloadedTodos.metadata));
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   };
 }
 
@@ -102,8 +114,8 @@ export function searchTodos(searchValue, userId) {
     console.log('searchValue:', searchValue);
     return SERVICES.searchTodo(searchValue, userId).then(
       (response) => {
-        // console.log('search result');
-        // console.log(response.data.data);
+        console.log('search result');
+        console.log(response.data.data);
         let extractedTodos = SERVICES.todoService.extractTodos(
           response.data.data
         );
@@ -126,15 +138,19 @@ export function setTags(tags) {
 
 export function fetchTags(userId) {
   return (dispatch) => {
-    return SERVICES.fetchTags(userId).then((fetchedTags) => {
-      // console.log('from fetchTags action');
-      dispatch(setTags(fetchedTags.data));
-      // dispatch(setTodoProps(extractedTodos));
-      // dispatch(setTodoMetaData(downloadedTodos.metadata));
-    },
-    (err) => {
-      console.log('err');
-    });
+    return SERVICES.fetchTags(userId).then(
+      (fetchedTags) => {
+        // console.log('from fetchTags action');
+        if (fetchedTags) {
+          dispatch(setTags(fetchedTags.data));
+        }
+        // dispatch(setTodoProps(extractedTodos));
+        // dispatch(setTodoMetaData(downloadedTodos.metadata));
+      },
+      (err) => {
+        console.log('err');
+      }
+    );
   };
 }
 

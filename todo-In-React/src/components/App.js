@@ -42,10 +42,8 @@ const App = (props) => {
     });
   }
 
-
-  const handleLogIn = () => {
-    console.log('from handleLogin');
-    props.login(props.logInDetails)
+  const handleLogIn = (loginDetails) => {
+    props.login(loginDetails || props.logInDetails)
       .then((data) => {
         if (data) {
           localStorage.setItem(
@@ -59,7 +57,7 @@ const App = (props) => {
               authenticated: true
             })
           );
-          setTokenInHeader(data.tokens);
+          setTokenInHeader(data.tokens.accessToken);
           addInterceptor();
         } else {
           console.log('login unsuccessful');
@@ -93,8 +91,11 @@ const App = (props) => {
           let { email } = response.data.data;
           let { password } = response.data.data;
           props.setLoginEmail(email);
-          props.setLoginPassword(password);
-          handleLogIn();
+          let a = props.setLoginPassword(password);
+          console.log('a from setpassword', a);
+          console.log('now calling handleLogin');
+          console.log('from register',props.logInDetails);
+          handleLogIn({email, password});
         }
       })
       .catch((err) => {

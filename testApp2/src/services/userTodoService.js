@@ -57,6 +57,7 @@ export async function searchUserTodo(user_id, queries) {
     .fetchPage({
       pageSize: 5, // Defaults to 10 if not specified
       page: 1, // Defaults to 1 if not specified
+      withRelated: ['tags']
     })
     .then(userTodo => {
       if(!userTodo) {

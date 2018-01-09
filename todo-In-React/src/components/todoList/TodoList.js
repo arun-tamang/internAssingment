@@ -1,16 +1,18 @@
 import React from 'react';
-import { Todo } from '../todoItem/Todo';
+import Todo from '../todoItem/Todo';
 import { AddTodoForm } from '../forms/AddTodo';
 import { SearchTodoForm } from '../forms/SearchTodo';
 import { PopupEdit } from '../forms/PopUpEdit';
 import { Pagination } from '../pagination/Pagination';
+import MyCalendar from '../calendar';
 
 import SERVICES from '../../services/serviceContainer';
 import { getTodoIndex } from '../../services/todoListService/todoService';
 
 const TodoList = (props) => {
   const fetchTodos = () => {
-    props.fetchTodos(props.userId).catch((err) => {
+    console.log('from fetchTodos in Component', props.metadata);
+    props.fetchTodos(props.userId, props.metadata.page).catch((err) => {
       console.log(err);
     });
   };
@@ -68,14 +70,15 @@ const TodoList = (props) => {
     togglePopUp(title);
   };
 
-  const handleAdd = (title, tags) => {
-    SERVICES.addTodo(props.userId, title, tags)
+  const handleAdd = (title, tagIds, tagNames) => {
+    console.log('tagIds', tagIds);
+    SERVICES.addTodo(props.userId, title, tagIds)
       .then((response) => {
         let { id } = response.data;
         if (decideFetch() === true) {
           fetchTodos();
         } else {
-          props.addTodo({ id, title, tags });
+          props.addTodo({ id, title, tags:tagNames });
         }
       })
       .catch((err) => console.log(err));
@@ -91,6 +94,10 @@ const TodoList = (props) => {
       props.fetchTodos(props.userId, page);
     }
   };
+
+  // const moveTodo = (dragIndex, hoverIndex) => {
+  //   props.moveTodo(dragIndex, hoverIndex);
+	// }
 
   return (
     <div>
@@ -123,17 +130,20 @@ const TodoList = (props) => {
             ) : (false)
           }
         </div>
+        <MyCalendar todos={props.todoProps} />
         <div className="todos-container">
           <h2 className="todo-header">{props.title}</h2>
           <ul className="todo-list">
-            {props.todoProps.map((item) => (
+            {props.todoProps.map((item, i) => (
               <Todo
                 key={item.id}
                 id={item.id}
+                index={i}
                 title={item.title}
                 tags={item.tags}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
+                moveTodo={props.moveTodo}
               />
             ))}
           </ul>

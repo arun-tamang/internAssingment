@@ -15,6 +15,7 @@ export function up(knex) {
     table.string('name').notNull();
     table.boolean('completed').notNull().defaultTo(false);
     table.integer('user_id').references('id').inTable('users');
+    table.dateTime('expires_at');
   });
 }
 

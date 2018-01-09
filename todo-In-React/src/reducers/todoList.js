@@ -10,7 +10,7 @@ const setTodoMetaData = (state, action) => {
     ...state,
     metadata: action.metadata
   };
-}
+};
 
 const editTodo = (state, action) => {
   let newState = [...state];
@@ -27,9 +27,9 @@ const setSearchKeywords = (state, action) => {
 
 const setSearchTags = (state, action) => {
   let stateCopy = { ...state };
-  let tagCopy = [...state.tags]
+  let tagCopy = [...state.tags];
   let index = tagCopy.indexOf(action.newTag);
-  if( index === -1) {
+  if (index === -1) {
     // stateCopy.tags.push(action.newTag);
     tagCopy.push(action.newTag);
   } else {
@@ -47,19 +47,31 @@ const toggleHeight = (state) => {
     return 60;
   }
   return 0;
+};
+
+const moveTodo = (state, action) => {
+  let todos = [...state];
+  let dragTodo = todos[action.dragIndex];
+  // need to swap
+  todos.splice(action.dragIndex, 1);
+  todos.splice(action.hoverIndex, 0, dragTodo);
+  return todos;
 }
 
 const todoList = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
-        ...state, todoProps: [action.newTodo, ...state.todoProps]
+        ...state,
+        todoProps: [action.newTodo, ...state.todoProps]
       };
     case 'REMOVE_TODO':
       return {
         ...state,
-        todoProps: [...state.todoProps.slice(0, action.index),
-          ...state.todoProps.slice(action.index + 1)]
+        todoProps: [
+          ...state.todoProps.slice(0, action.index),
+          ...state.todoProps.slice(action.index + 1)
+        ]
       };
     case 'EDIT_TODO':
       return {
@@ -72,7 +84,8 @@ const todoList = (state = [], action) => {
       return setTodoMetaData(state, action);
     case 'SET_TAGS':
       return {
-        ...state, availableTags: action.tags
+        ...state,
+        availableTags: action.tags
       };
     case 'SET_SEARCH_KEYWORDS':
       return {
@@ -92,21 +105,26 @@ const todoList = (state = [], action) => {
     case 'TOGGLE_POPUP':
       return {
         ...state,
-        showPopUp: !(state.showPopUp)
+        showPopUp: !state.showPopUp
       };
     case 'TOGGLE_ADD_FORM':
       return {
         ...state,
         addFormHeight: toggleHeight(state.addFormHeight)
-      }
+      };
     case 'SET_POPUP_EDIT_TITLE':
       return {
         ...state,
         popUpEditTitle: action.title
-      }
+      };
     case 'RESET_STORE':
       console.log('reset store from todoList reducer');
       return action.defaultState.todoList;
+    case 'MOVE_TODO':
+      return {
+        ...state,
+        todoProps: moveTodo(state.todoProps, action)
+      };
     default:
       return state;
   }

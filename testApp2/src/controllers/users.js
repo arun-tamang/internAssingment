@@ -7,6 +7,7 @@ import { findUserTodo, userTodoValidator } from '../validators/userTodoValidator
 import * as tokenValidator from '../validators/tokenValidator';
 import userTodoController from './userTodo.js';
 import * as userTodoService from '../services/userTodoService';
+import { process } from 'joi/lib/errors';
 // import paginateTodo from './paginateTodo';
 
 
@@ -49,7 +50,8 @@ router.get('/:id/todo/search', tokenValidator.validateToken, (req, res, next) =>
 // Handle requests for user todos.
 router.get('/:id/todo/:pageNo', tokenValidator.validateToken, (req, res, next) => {
   // console.log('the id is:');
-  console.log(req.params.id);
+  // console.log(req.params.id);
+  console.log('Cluster', process.pid);
   userTodoService
     .getUserTodo(req.params.id, req.params.pageNo)
     .then(data => {

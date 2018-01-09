@@ -10,6 +10,7 @@ export function getTodoIndex(id, todoProps) {
 
 export function extractTodos(toExtract) {
   // console.log(toExtract);
+  // console.log('from extract', toExtract);
   let tagName = [];
   let todoProperties = [];
   for (let i = 0; i < toExtract.length; i++) {
@@ -17,7 +18,10 @@ export function extractTodos(toExtract) {
     todoProperties[i] = {
       id: toExtract[i].id,
       title: toExtract[i].name,
-      tags: tagName || []
+      tags: tagName || [],
+      createdAt: toExtract[i].createdAt,
+      updatedAt: toExtract[i].updatedAt,
+      completed: toExtract[i].completed
     };
   }
 

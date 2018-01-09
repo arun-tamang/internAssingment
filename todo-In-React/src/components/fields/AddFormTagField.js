@@ -9,7 +9,7 @@ const AddTagItem = (props) => {
       <input
         className="height-transition fancy"
         type="checkbox"
-        onClick={(event) => props.handleTagClick(props.id)}
+        onClick={(event) => props.handleTagClick(props.id, props.name)}
         value={props.name}
         style={{...props.style, height: props.style.height * 1.4}}
       />
@@ -25,10 +25,6 @@ const AddTagItem = (props) => {
 };
 
 export const AddTagField = (props) => {
-  const handleClick = (id) => {
-    // console.log('from add from', id);
-    props.handleClick(id);
-  };
   return (
     <fieldset className='height-transition'>
       <legend className="height-transition" style={{...props.style, height: props.style.height * 4}}>
@@ -38,7 +34,7 @@ export const AddTagField = (props) => {
         {props.tagArray.map((tagItem) => (
           <AddTagItem
             key={tagItem.id}
-            handleTagClick={handleClick}
+            handleTagClick={props.handleClick}
             id={tagItem.id}
             name={tagItem.name}
             style={props.style}

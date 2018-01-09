@@ -6,10 +6,12 @@ import { AddTagField } from '../fields/AddFormTagField';
 export const AddTodoForm = (props) => {
   let newTitle = '';
   let newTags = new Set();
+  let newTagTitles = new Set();
 
   let handleClick = () => {
     let tagString = [...newTags].join(',');
-    props.handleAddClick(newTitle, tagString);
+    let tagNameArray = [...newTagTitles];
+    props.handleAddClick(newTitle, tagString, tagNameArray);
   };
 
   let handleTitleChange = (event) => {
@@ -20,13 +22,18 @@ export const AddTodoForm = (props) => {
   //   newTags = event.target.value;
   // };
 
-  const handleAddTagClick = (id) => {
+  const handleAddTagClick = (id, name) => {
     // props.handleChange(name, 1);
     // console.log('tag clicked', id);
     if (newTags.has(id)) {
       newTags.delete(id);
     } else {
       newTags.add(id);
+    }
+    if (newTagTitles.has(name)) {
+      newTagTitles.delete(name);
+    } else {
+      newTagTitles.add(name);
     }
     // console.log(newTags);
     // console.log([...newTags].join(','));

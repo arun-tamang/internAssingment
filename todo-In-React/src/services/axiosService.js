@@ -1,10 +1,9 @@
 import myAxios from '../myAxios.js';
 
-export function setTokenInHeader (tokens) {
+export function setTokenInHeader (token) {
   myAxios.defaults.headers = {
-    Authorization: tokens.accessToken,
+    Authorization: token
   };
   // console.log('from setTokenINHeader');
   // console.log(myAxios.defaults.headers);
 }
-

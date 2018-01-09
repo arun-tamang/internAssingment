@@ -17,7 +17,7 @@ export function searchTodo(searchInput, userId) {
       }
     })
     .then((response) => {
-      // console.log('search response: ', response.data.data);
+      console.log('search response: ', response.data.data);
       return response;
     })
     .catch((err) => console.log(err));

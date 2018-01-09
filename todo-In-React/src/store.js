@@ -4,8 +4,13 @@ import thunk from 'redux-thunk';
 import rootReducer from './reducers/index';
 
 // import default data
+let CURRENT_USER = {};
+if (localStorage.currentUser) {
+  CURRENT_USER = JSON.parse(localStorage.currentUser);
+  // let authenticated = CURRENT_USER.authenticated || false;
+  // let userDetails = CURRENT_USER.userDetails || '';
+}
 
-const CURRENT_USER = JSON.parse(localStorage.currentUser);
 
 export const defaultState = {
   // default data here
@@ -24,8 +29,8 @@ export const defaultState = {
     metadata: {}
   },
   user: {
-    authenticated: CURRENT_USER.authenticated,
-    userDetails: CURRENT_USER.userDetails
+    authenticated: CURRENT_USER.authenticated || false,
+    userDetails: CURRENT_USER.userDetails || ''
   },
   logInDetails: {
     email: '',
@@ -46,6 +51,5 @@ const store = createStore(
   defaultState,
   composeEnhancers(applyMiddleware(thunk))
 );
-
 
 export default store;
