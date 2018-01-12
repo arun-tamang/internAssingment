@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const setTodoProps = (state, action) => {
   return {
     ...state,
@@ -49,6 +51,51 @@ const toggleHeight = (state) => {
   return 0;
 };
 
+const setTitleToAdd = (todoToAdd, action) => {
+  todoToAdd.title = action.title;
+  return todoToAdd;
+};
+
+const setExpDateToAdd = (todoToAdd, action) => {
+  todoToAdd.expiresAt = action.date;
+  return todoToAdd;
+};
+
+const setTagIdsToAdd = (todoToAdd, action) => {
+  let tagIdsCopy = [...todoToAdd.tagIds];
+  let index = tagIdsCopy.indexOf(action.id);
+  if (index === -1) {
+    tagIdsCopy.push(action.id);
+  } else {
+    tagIdsCopy.splice(index, 1);
+  }
+  todoToAdd.tagIds = tagIdsCopy;
+
+  return todoToAdd;
+};
+
+const setTagNamesToAdd = (todoToAdd, action) => {
+  let tagNamesCopy = [...todoToAdd.tagNames];
+  let index = tagNamesCopy.indexOf(action.name);
+  if (index === -1) {
+    tagNamesCopy.push(action.name);
+  } else {
+    tagNamesCopy.splice(index, 1);
+  }
+  todoToAdd.tagNames = tagNamesCopy;
+
+  return todoToAdd;
+};
+
+const resetTodoToAdd = (todoToAdd) => {
+  todoToAdd.title = '';
+  todoToAdd.tagIds = [];
+  todoToAdd.tagNames = [];
+  todoToAdd.expiresAt = moment();
+
+  return todoToAdd;
+}
+
 const moveTodo = (state, action) => {
   let todos = [...state];
   let dragTodo = todos[action.dragIndex];
@@ -56,7 +103,7 @@ const moveTodo = (state, action) => {
   todos.splice(action.dragIndex, 1);
   todos.splice(action.hoverIndex, 0, dragTodo);
   return todos;
-}
+};
 
 const todoList = (state = [], action) => {
   switch (action.type) {
@@ -107,16 +154,41 @@ const todoList = (state = [], action) => {
         ...state,
         showPopUp: !state.showPopUp
       };
-    case 'TOGGLE_ADD_FORM':
-      return {
-        ...state,
-        addFormHeight: toggleHeight(state.addFormHeight)
-      };
     case 'SET_POPUP_EDIT_TITLE':
       return {
         ...state,
         popUpEditTitle: action.title
       };
+    case 'TOGGLE_ADD_FORM':
+      return {
+        ...state,
+        addFormHeight: toggleHeight(state.addFormHeight)
+      };
+    case 'SET_TITLE_TO_ADD':
+      return {
+        ...state,
+        todoToAdd: setTitleToAdd({...state.todoToAdd}, action)
+      };
+    case 'SET_EXP_DATE_TO_ADD':
+      return {
+        ...state,
+        todoToAdd: setExpDateToAdd({...state.todoToAdd}, action)
+      };
+    case 'SET_TAG_IDS_TO_ADD':
+      return {
+        ...state,
+        todoToAdd: setTagIdsToAdd({...state.todoToAdd}, action)
+      };
+    case 'SET_TAG_NAMES_TO_ADD':
+      return {
+        ...state,
+        todoToAdd: setTagNamesToAdd({...state.todoToAdd}, action)
+      };
+    case 'RESET_TODO_TO_ADD':
+      return {
+        ...state,
+        todoToAdd: resetTodoToAdd({...state.todoToAdd})
+      }
     case 'RESET_STORE':
       console.log('reset store from todoList reducer');
       return action.defaultState.todoList;

@@ -42,7 +42,7 @@ const App = (props) => {
     });
   }
 
-  const handleLogIn = (loginDetails) => {
+  const handleLogIn = (event, loginDetails) => {
     props.login(loginDetails || props.logInDetails)
       .then((data) => {
         if (data) {
@@ -95,7 +95,7 @@ const App = (props) => {
           console.log('a from setpassword', a);
           console.log('now calling handleLogin');
           console.log('from register',props.logInDetails);
-          handleLogIn({email, password});
+          handleLogIn(null, {email, password});
         }
       })
       .catch((err) => {
@@ -106,8 +106,10 @@ const App = (props) => {
   const checkAuthentication = () => {
     if (props.user.authenticated === true) {
       addInterceptor();
-      props.fetchTodos(props.user.userDetails.id, 1);
-      props.fetchTags(props.user.userDetails.id);
+      props.fetchTodos(props.user.userDetails.id, 1)
+      .then(() => {
+        props.fetchTags(props.user.userDetails.id);
+      });
     }
   }
 

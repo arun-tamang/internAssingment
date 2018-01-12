@@ -70,34 +70,25 @@ const TodoList = (props) => {
     togglePopUp(title);
   };
 
-  const handleAdd = (title, tagIds, tagNames) => {
-    console.log('tagIds', tagIds);
-    SERVICES.addTodo(props.userId, title, tagIds)
+  const handleAdd = () => {
+    SERVICES.addTodo(props.userId, props.todoToAdd.title, props.todoToAdd.tagIds)
       .then((response) => {
         let { id } = response.data;
         if (decideFetch() === true) {
           fetchTodos();
         } else {
-          props.addTodo({ id, title, tags:tagNames });
+          props.addTodo({ id, title: props.todoToAdd.title, tags:props.todoToAdd.tagNames });
         }
+        props.resetTodoToAdd();
       })
       .catch((err) => console.log(err));
   };
 
-  const toggleAddFrom = () => {
-    props.toggleAddForm();
-  };
-
   const setPage = (page) => {
-    // console.log('page', page);
     if(page > 0 && page <= props.metadata.pageCount && page !== props.metadata.page) {
       props.fetchTodos(props.userId, page);
     }
   };
-
-  // const moveTodo = (dragIndex, hoverIndex) => {
-  //   props.moveTodo(dragIndex, hoverIndex);
-	// }
 
   return (
     <div>
@@ -110,13 +101,20 @@ const TodoList = (props) => {
       ) : null}
       <div className="container">
         <div className="add-button-container">
-          <button onClick={toggleAddFrom} className="fa fa-plus" />
+          <button onClick={props.toggleAddForm} className="fa fa-plus" />
         </div>
         <div className="add-wrapper">
           <AddTodoForm
             height={props.addFormHeight}
-            handleAddClick={handleAdd}
+            addTitle={props.todoToAdd.title}
+            activeTagIds={props.todoToAdd.tagIds}
             availableTags={props.availableTags}
+            expiryDate={props.todoToAdd.expiresAt}
+            handleAddSubmit={handleAdd}
+            setTitleToAdd={props.setTitleToAdd}
+            setExpDateToAdd={props.setExpDateToAdd}
+            setTagIdsToAdd={props.setTagIdsToAdd}
+            setTagNamesToAdd={props.setTagNamesToAdd}
           />
         </div>
         <div className="pagination-container">

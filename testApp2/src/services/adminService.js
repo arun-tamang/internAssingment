@@ -9,10 +9,9 @@ export async function register(req, res, next) {
     .catch(err => next(err));
 }
 
-export function logout(req, res, next) {
+export async function logout(req, res, next) {
   let rfsToken = req.headers.authorization;
-  // console.log(req.headers);
-  let logoutResult = tokenService.removeRefreshToken(rfsToken);
+  let logoutResult = await tokenService.removeRefreshToken(rfsToken);
   // console.log('result of logout from adminService');
   // console.log(logoutResult);
   if (logoutResult) {

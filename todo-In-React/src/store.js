@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import moment from 'moment';
 
 import rootReducer from './reducers/index';
 
@@ -7,10 +8,7 @@ import rootReducer from './reducers/index';
 let CURRENT_USER = {};
 if (localStorage.currentUser) {
   CURRENT_USER = JSON.parse(localStorage.currentUser);
-  // let authenticated = CURRENT_USER.authenticated || false;
-  // let userDetails = CURRENT_USER.userDetails || '';
 }
-
 
 export const defaultState = {
   // default data here
@@ -25,6 +23,12 @@ export const defaultState = {
       keywords: ''
     },
     addFormHeight: 0,
+    todoToAdd: {
+      title: '',
+      tagIds: [],
+      tagNames: [],
+      expiresAt: moment()
+    },
     availableTags: [],
     metadata: {}
   },

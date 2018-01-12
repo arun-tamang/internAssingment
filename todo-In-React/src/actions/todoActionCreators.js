@@ -172,3 +172,37 @@ export function toggleAddForm() {
     type: 'TOGGLE_ADD_FORM'
   };
 }
+
+export function setTitleToAdd(title) {
+  return {
+    type: 'SET_TITLE_TO_ADD',
+    title
+  };
+}
+
+export function setExpDateToAdd(date) {
+  return {
+    type: 'SET_EXP_DATE_TO_ADD',
+    date
+  };
+}
+
+export function setTagIdsToAdd(id) {
+  return {
+    type: 'SET_TAG_IDS_TO_ADD',
+    id
+  };
+}
+
+export function setTagNamesToAdd(name) {
+  return {
+    type: 'SET_TAG_NAMES_TO_ADD',
+    name
+  };
+}
+
+export function resetTodoToAdd() {
+  return {
+    type: 'RESET_TODO_TO_ADD'
+  };
+}

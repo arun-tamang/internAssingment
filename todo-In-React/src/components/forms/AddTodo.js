@@ -1,42 +1,21 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
 // import { AddButton } from '../buttons/AddButton';
 import { AddTagField } from '../fields/AddFormTagField';
-// import '../../styles/addForm.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export const AddTodoForm = (props) => {
-  let newTitle = '';
-  let newTags = new Set();
-  let newTagTitles = new Set();
-
-  let handleClick = () => {
-    let tagString = [...newTags].join(',');
-    let tagNameArray = [...newTagTitles];
-    props.handleAddClick(newTitle, tagString, tagNameArray);
-  };
-
   let handleTitleChange = (event) => {
-    newTitle = event.target.value;
+    props.setTitleToAdd(event.target.value);
   };
 
-  // let handleTagChange = (event) => {
-  //   newTags = event.target.value;
-  // };
+  let handleDateChange = (newDate) => {
+    props.setExpDateToAdd(newDate);
+  };
 
   const handleAddTagClick = (id, name) => {
-    // props.handleChange(name, 1);
-    // console.log('tag clicked', id);
-    if (newTags.has(id)) {
-      newTags.delete(id);
-    } else {
-      newTags.add(id);
-    }
-    if (newTagTitles.has(name)) {
-      newTagTitles.delete(name);
-    } else {
-      newTagTitles.add(name);
-    }
-    // console.log(newTags);
-    // console.log([...newTags].join(','));
+    props.setTagIdsToAdd(id);
+    props.setTagNamesToAdd(name);
   };
 
   let opacity = props.height === 0 ? 0 : 1;
@@ -52,24 +31,22 @@ export const AddTodoForm = (props) => {
         type="text"
         placeholder="add todo title here..."
         onChange={handleTitleChange}
+        value={props.addTitle}
         style={{ height: props.height, opacity }}
       />
-      {/* <input
-        className="height-transition add-form-input"
-        type="text"
-        placeholder="add tagIds(eg: 1, 2,.., 8)"
-        onChange={handleTagChange}
-        style={{ height: props.height, opacity }}
-      /> */}
       <AddTagField
+        activeTagIds={props.activeTagIds}
         tagArray={[...props.availableTags]}
         handleClick={handleAddTagClick}
         style={{ height: tagFieldHeight, opacity }}
       />
+      <div className="datepicker-container">
+        <DatePicker selected={props.expiryDate} onChange={handleDateChange} />
+      </div>
       <button
         type="button"
         className="btn btn-primary height-transition"
-        onClick={handleClick}
+        onClick={props.handleAddSubmit}
         style={{ height: props.height, opacity }}
       >
         Add
