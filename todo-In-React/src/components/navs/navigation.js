@@ -8,11 +8,11 @@ const NavBar = (props) => {
   const handleLogOut = () => {
     logout()
       .then((data) => {
-        console.log(data);
-        props.handleLogOut();
-      })
-      .catch((err) => {
-        console.log(err);
+        if(data) {
+          props.handleLogOut();
+        } else {
+          console.log('can\'t seem to logout');
+        }
       });
   };
 

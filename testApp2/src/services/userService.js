@@ -5,7 +5,6 @@ import * as tokenService from './tokenService';
 import * as jwt from '../utils/jwt.js';
 import JWT from 'jsonwebtoken';
 
-
 /**
  * Get all users.
  *
@@ -44,7 +43,9 @@ export function createUser(user) {
     last_name: user.lastName,
     email: user.email,
     password: user.password
-  }).save().then(user => user.refresh());
+  })
+    .save()
+    .then(user => user.refresh());
 }
 
 /**
@@ -89,22 +90,22 @@ export async function validateUser(loginParams) {
   let validated = false;
   try {
     let rawUserInfo = await getUserInfo(email);
-    if(rawUserInfo === null) {
-      throw ('wrong email or password. Try again.');
+    if (rawUserInfo === null) {
+      throw new Boom.unauthorized('wrong email or password');
     }
     let userInfo = rawUserInfo.toJSON();
-    if(userInfo.password === password) {
+    if (userInfo.password === password) {
       validated = true;
-      // console.log('user is validated');
-      return {validated, userInfo};
+      console.log('user is validated', userInfo);
+      return { validated, userInfo };
     } else {
       // wrong password or username
       // console.log('wrong password or username');
       validated = false;
-      return {validated, userInfo};
+      return { validated, userInfo };
     }
-  } catch(e) {
+  } catch (e) {
     // i think this would be suitable when getUserInfo returns null and we try to access userInfo.password
-    throw (e);
+    throw e;
   }
 }

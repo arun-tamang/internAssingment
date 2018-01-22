@@ -4,7 +4,9 @@ import SERVICES from '../services/serviceContainer';
 export function addTodo(newTodo) {
   return {
     type: 'ADD_TODO',
-    newTodo
+    payload: {
+      newTodo
+    }
   };
 }
 
@@ -12,7 +14,9 @@ export function addTodo(newTodo) {
 export function removeTodo(index) {
   return {
     type: 'REMOVE_TODO',
-    index
+    payload: {
+      index
+    }
   };
 }
 
@@ -20,8 +24,10 @@ export function removeTodo(index) {
 export function editTodo(title, index) {
   return {
     type: 'EDIT_TODO',
-    title,
-    index
+    payload: {
+      title,
+      index
+    }
   };
 }
 
@@ -29,8 +35,10 @@ export function editTodo(title, index) {
 export function searchTodo(keys, tags) {
   return {
     type: 'SEARCH_TODO',
-    keys,
-    tags
+    payload: {
+      keys,
+      tags
+    }
   };
 }
 
@@ -38,7 +46,9 @@ export function searchTodo(keys, tags) {
 export function setTodoProps(todoProps) {
   return {
     type: 'SET_TODO_PROPS',
-    todoProps
+    payload: {
+      todoProps
+    }
   };
 }
 
@@ -46,7 +56,9 @@ export function setTodoProps(todoProps) {
 export function setTodoMetaData(metadata) {
   return {
     type: 'SET_TODO_META_DATA',
-    metadata
+    payload: {
+      metadata
+    }
   };
 }
 
@@ -54,7 +66,9 @@ export function setTodoMetaData(metadata) {
 export function setSearchKeywords(keywords) {
   return {
     type: 'SET_SEARCH_KEYWORDS',
-    keywords
+    payload: {
+      keywords
+    }
   };
 }
 
@@ -62,7 +76,9 @@ export function setSearchKeywords(keywords) {
 export function setSearchTags(newTag) {
   return {
     type: 'SET_SEARCH_TAGS',
-    newTag
+    payload: {
+      newTag
+    }
   };
 }
 
@@ -70,15 +86,19 @@ export function setSearchTags(newTag) {
 export function setTodoToEdit(todoId) {
   return {
     type: 'SET_TODO_TO_EDIT',
-    todoId
+    payload: {
+      todoId
+    }
   };
 }
 
 export function moveTodo(dragIndex, hoverIndex) {
   return {
     type: 'MOVE_TODO',
-    dragIndex,
-    hoverIndex
+    payload: {
+      dragIndex,
+      hoverIndex
+    }
   };
 }
 
@@ -110,29 +130,25 @@ export function fetchTodos(userId, pageNo) {
 
 // search todos
 export function searchTodos(searchValue, userId) {
-  return (dispatch) => {
-    console.log('searchValue:', searchValue);
-    return SERVICES.searchTodo(searchValue, userId).then(
-      (response) => {
-        console.log('search result');
-        console.log(response.data.data);
+  return dispatch => {
+    return SERVICES.searchTodo(searchValue, userId).then(response => {
+      if (response) {
         let extractedTodos = SERVICES.todoService.extractTodos(
           response.data.data
         );
         // this.currentNumTodos = extractedTodos.length;
         dispatch(setTodoProps(extractedTodos));
-      },
-      (err) => {
-        console.log(err);
       }
-    );
+    });
   };
 }
 
 export function setTags(tags) {
   return {
     type: 'SET_TAGS',
-    tags
+    payload: {
+      tags
+    }
   };
 }
 
@@ -148,7 +164,7 @@ export function fetchTags(userId) {
         // dispatch(setTodoMetaData(downloadedTodos.metadata));
       },
       (err) => {
-        console.log('err');
+        console.log(err);
       }
     );
   };
@@ -163,7 +179,9 @@ export function togglePopUp() {
 export function setPopUpEditTitle(title) {
   return {
     type: 'SET_POPUP_EDIT_TITLE',
-    title
+    payload: {
+      title
+    }
   };
 }
 
@@ -176,28 +194,36 @@ export function toggleAddForm() {
 export function setTitleToAdd(title) {
   return {
     type: 'SET_TITLE_TO_ADD',
-    title
+    payload: {
+      title
+    }
   };
 }
 
 export function setExpDateToAdd(date) {
   return {
     type: 'SET_EXP_DATE_TO_ADD',
-    date
+    payload: {
+      date
+    }
   };
 }
 
 export function setTagIdsToAdd(id) {
   return {
     type: 'SET_TAG_IDS_TO_ADD',
-    id
+    payload: {
+      id
+    }
   };
 }
 
 export function setTagNamesToAdd(name) {
   return {
     type: 'SET_TAG_NAMES_TO_ADD',
-    name
+    payload: {
+      name
+    }
   };
 }
 

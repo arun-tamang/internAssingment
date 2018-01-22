@@ -4,15 +4,19 @@ import SERVICES from '../services/serviceContainer';
 export function requestTokens(userInfo) {
   return {
     type: 'REQUEST_TOKENS',
-    userInfo
+    payload: {
+      userInfo
+    }
   };
 }
 
 export function receiveTokensAndUserDetails(tokens, userDetails) {
   return {
     type: 'RECEIVE_TOKENS_AND_USERDETAILS',
-    tokens,
-    userDetails
+    payload: {
+      tokens,
+      userDetails
+    }
   };
 }
 
@@ -25,21 +29,27 @@ export function removeTokensAndUserDetails() {
 export function setAuthentication(authenticated = false) {
   return {
     type: 'SET_AUTHENTICATION',
-    authenticated
+    payload: {
+      authenticated
+    }
   };
 }
 
 export function setLoginEmail(email) {
   return {
     type: 'SET_LOGIN_EMAIL',
-    email
+    payload: {
+      email
+    }
   };
 }
 
 export function setLoginPassword(password) {
   return {
     type: 'SET_LOGIN_PASSWORD',
-    password
+    payload: {
+      password
+    }
   };
 }
 
@@ -49,15 +59,15 @@ export function login(userInfo) {
     // dispatch(requestTokens(userInfo));
     return SERVICES.login(userInfo)
       .then(
-        (response) => {
-          let { tokens } = response.data;
-          let userDetails = response.data.userInfo;
-          SERVICES.setTokenInHeader(tokens);
-          dispatch(receiveTokensAndUserDetails(tokens, userDetails));
-          dispatch(setAuthentication(true));
-          return { tokens, userDetails };
-        },
-        (err) => console.log(err)
+      (response) => {
+        let { tokens } = response.data;
+        let userDetails = response.data.userInfo;
+        SERVICES.setTokenInHeader(tokens);
+        dispatch(receiveTokensAndUserDetails(tokens, userDetails));
+        dispatch(setAuthentication(true));
+        return { tokens, userDetails };
+      },
+      (err) => console.log(err)
       )
       .catch((err) => console.log(err));
     // It's a bad idea to use catch(acc to docs) but this prevents from app crashing because
@@ -79,6 +89,8 @@ export function register(newUserDetails) {
 export function resetStore(defaultState) {
   return {
     type: 'RESET_STORE',
-    defaultState
+    payload: {
+      defaultState
+    }
   };
 }

@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 const Login = (routerProps, { ...props }) => {
-  // console.log('props from login', props);
   const redirect = () => {
     const { from } = routerProps.location.state || { from: { pathname: '/' } };
     return <Redirect to={from} />;

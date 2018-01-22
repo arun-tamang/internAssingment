@@ -18,11 +18,9 @@ let tokens = {};
 
 describe('Users Controller Test', () => {
   before(done => {
-    bookshelf.knex.raw('TRUNCATE TABLE users, user_todo CASCADE').then(() => {
-      bookshelf.knex
-        .raw('TRUNCATE TABLE user_todo, tags_user_todo CASCADE')
-        .then(() => done());
-    });
+    bookshelf.knex
+      .raw('TRUNCATE TABLE users, user_todo RESTART IDENTITY CASCADE')
+      .then(() => done());
   });
 
   it('should return list of users', done => {
@@ -103,18 +101,22 @@ describe('Users Controller Test', () => {
       });
   });
 
-  // it('should not give tokens for login with wrong password', done => {
-  //   let { email } = validNewUser;
-  //   let password = 'dummy password';
-  //   request(app)
-  //     .post('/api/admin/login')
-  //     .send({ email, password })
-  //     .end((err, res) => {
-  //       console.log(res);
+  it('should not give tokens for login with wrong password', done => {
+    let { email } = validNewUser;
+    let password = 'dummy password';
+    request(app)
+      .post('/api/admin/login')
+      .send({ email, password })
+      .end((err, res) => {
+        let { error } = res.body;
 
-  //       done();
-  //     });
-  // });
+        expect(res.statusCode).to.be.equal(401);
+        expect(error.code).to.be.equal(401);
+        expect(error.message).to.be.equal('wrong email or password');
+
+        done();
+      });
+  });
 
   it('should return tokens on successful login', done => {
     let { email, password } = validNewUser;
@@ -146,6 +148,7 @@ describe('Users Controller Test', () => {
       .send(newTodo)
       .end((err, res) => {
         let { body } = res;
+
         expect(res.statusCode).to.be.equal(200);
         expect(body).to.be.an('object');
         expect(body).to.have.property('name');
@@ -155,7 +158,7 @@ describe('Users Controller Test', () => {
       });
   });
 
-  it('should return list of user\'s todos', done => {
+  it("should return list of user's todos", done => {
     let header = { Authorization: tokens.accessToken };
     request(app)
       .get('/api/users/' + validNewUser.id + '/todo/1')

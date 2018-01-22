@@ -9,10 +9,10 @@ const removeTokensAndUserDetails = (state) => {
 const receiveTokensAndUserDetails = (state, action) => {
   return {
     ...state,
-    tokens: action.tokens,
+    tokens: action.payload.tokens,
     userDetails: {
-      email: action.userDetails.email,
-      id: action.userDetails.id
+      email: action.payload.userDetails.email,
+      id: action.payload.userDetails.id
     }
   };
 };
@@ -20,7 +20,7 @@ const receiveTokensAndUserDetails = (state, action) => {
 const setAuthentication = (state, action) => {
   return {
     ...state,
-    authenticated: action.authenticated
+    authenticated: action.payload.authenticated
   };
 };
 
@@ -41,7 +41,7 @@ const user = (state = [], action) => {
       console.log('receive tokens and userDetails dispatched');
       return removeTokensAndUserDetails(state);
     // case 'RESET_STORE':
-    //   return action.defaultState.user;
+    //   return action.payload.defaultState.user;
     default:
       return state;
   }

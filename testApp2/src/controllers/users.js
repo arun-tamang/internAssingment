@@ -39,14 +39,13 @@ router.get(
   '/:id/todo/search',
   tokenValidator.validateToken,
   (req, res, next) => {
-    console.log(
-      'from users..............................................',
-      req.query
-    );
+    // console.log(
+    //   'from users..............................................',
+    //   req.query
+    // );
     userTodoService
       .searchUserTodo(req.params.id, req.query)
       .then(data => {
-        // paginateTodo(data);
         res.json({ data, metadata: data.pagination });
       })
       .catch(err => next(err));

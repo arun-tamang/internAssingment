@@ -11,7 +11,7 @@ import { getTodoIndex } from '../../services/todoListService/todoService';
 
 const TodoList = (props) => {
   const fetchTodos = () => {
-    console.log('from fetchTodos in Component', props.metadata);
+    // console.log('from fetchTodos in Component', props.metadata);
     props.fetchTodos(props.userId, props.metadata.page).catch((err) => {
       console.log(err);
     });

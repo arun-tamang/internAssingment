@@ -67,7 +67,6 @@ export function bodyParser(err, req, res, next) {
 // eslint-disable-next-line no-unused-vars
 export function genericErrorHandler(err, req, res, next) {
   logger.error(err);
-
   let error = buildError(err);
   res.status(error.code).json({ error });
 }

@@ -1,3 +1,4 @@
+import Boom from 'boom';
 import * as userService from './userService.js';
 import * as tokenService from './tokenService.js';
 import HttpStatus from 'http-status-codes';
@@ -48,26 +49,19 @@ export async function logout(req, res, next) {
 // };
 
 export async function login(req, res, next) {
-  try {
-    // console.log('in login of userService');
-    let loginParams = req.body;
-    let validationResult = await userService.validateUser(req.body);
-    // validateUser is async function so i got different result when i didn't use await.
-    if (validationResult.validated === true) {
-      // Now you can give token to the client.
-      let tokens = await tokenService.fetchTokens(validationResult.userInfo.id);
-      tokenService.addRefreshToken(tokens.refreshToken);
+  // console.log('in login of userService');
+  let loginParams = req.body;
+  let validationResult = await userService.validateUser(req.body);
+  // validateUser is async function so i got different result when i didn't use await.
+  if (validationResult.validated === true) {
+    // Now you can give token to the client.
+    let tokens = await tokenService.fetchTokens(validationResult.userInfo.id);
+    tokenService.addRefreshToken(tokens.refreshToken);
 
-      return { userInfo: validationResult.userInfo, tokens: tokens };
-    } else {
-      // wrong email or password
-      throw 'wrong email or password';
-    }
-  } catch (e) {
-    // handle error here
-    console.log('error occurred in login');
-    // res.send(e);
-    throw e;
+    return { userInfo: validationResult.userInfo, tokens: tokens };
+  } else {
+    // wrong email or password
+    throw new Boom.unauthorized('wrong email or password');
   }
 }
 

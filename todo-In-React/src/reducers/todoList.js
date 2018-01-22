@@ -3,37 +3,37 @@ import moment from 'moment';
 const setTodoProps = (state, action) => {
   return {
     ...state,
-    todoProps: action.todoProps
+    todoProps: action.payload.todoProps
   };
 };
 
 const setTodoMetaData = (state, action) => {
   return {
     ...state,
-    metadata: action.metadata
+    metadata: action.payload.metadata
   };
 };
 
 const editTodo = (state, action) => {
   let newState = [...state];
-  newState[action.index].title = action.title;
+  newState[action.payload.index].title = action.payload.title;
   return newState;
 };
 
 const setSearchKeywords = (state, action) => {
   return {
     ...state,
-    keywords: action.keywords
+    keywords: action.payload.keywords
   };
 };
 
 const setSearchTags = (state, action) => {
   let stateCopy = { ...state };
   let tagCopy = [...state.tags];
-  let index = tagCopy.indexOf(action.newTag);
+  let index = tagCopy.indexOf(action.payload.newTag);
   if (index === -1) {
-    // stateCopy.tags.push(action.newTag);
-    tagCopy.push(action.newTag);
+    // stateCopy.tags.push(action.payload.newTag);
+    tagCopy.push(action.payload.newTag);
   } else {
     // stateCopy.tags.splice(index,1);
     tagCopy.splice(index, 1);
@@ -52,20 +52,20 @@ const toggleHeight = (state) => {
 };
 
 const setTitleToAdd = (todoToAdd, action) => {
-  todoToAdd.title = action.title;
+  todoToAdd.title = action.payload.title;
   return todoToAdd;
 };
 
 const setExpDateToAdd = (todoToAdd, action) => {
-  todoToAdd.expiresAt = action.date;
+  todoToAdd.expiresAt = action.payload.date;
   return todoToAdd;
 };
 
 const setTagIdsToAdd = (todoToAdd, action) => {
   let tagIdsCopy = [...todoToAdd.tagIds];
-  let index = tagIdsCopy.indexOf(action.id);
+  let index = tagIdsCopy.indexOf(action.payload.id);
   if (index === -1) {
-    tagIdsCopy.push(action.id);
+    tagIdsCopy.push(action.payload.id);
   } else {
     tagIdsCopy.splice(index, 1);
   }
@@ -76,9 +76,9 @@ const setTagIdsToAdd = (todoToAdd, action) => {
 
 const setTagNamesToAdd = (todoToAdd, action) => {
   let tagNamesCopy = [...todoToAdd.tagNames];
-  let index = tagNamesCopy.indexOf(action.name);
+  let index = tagNamesCopy.indexOf(action.payload.name);
   if (index === -1) {
-    tagNamesCopy.push(action.name);
+    tagNamesCopy.push(action.payload.name);
   } else {
     tagNamesCopy.splice(index, 1);
   }
@@ -98,10 +98,10 @@ const resetTodoToAdd = (todoToAdd) => {
 
 const moveTodo = (state, action) => {
   let todos = [...state];
-  let dragTodo = todos[action.dragIndex];
+  let dragTodo = todos[action.payload.dragIndex];
   // need to swap
-  todos.splice(action.dragIndex, 1);
-  todos.splice(action.hoverIndex, 0, dragTodo);
+  todos.splice(action.payload.dragIndex, 1);
+  todos.splice(action.payload.hoverIndex, 0, dragTodo);
   return todos;
 };
 
@@ -110,14 +110,14 @@ const todoList = (state = [], action) => {
     case 'ADD_TODO':
       return {
         ...state,
-        todoProps: [action.newTodo, ...state.todoProps]
+        todoProps: [action.payload.newTodo, ...state.todoProps]
       };
     case 'REMOVE_TODO':
       return {
         ...state,
         todoProps: [
-          ...state.todoProps.slice(0, action.index),
-          ...state.todoProps.slice(action.index + 1)
+          ...state.todoProps.slice(0, action.payload.index),
+          ...state.todoProps.slice(action.payload.index + 1)
         ]
       };
     case 'EDIT_TODO':
@@ -132,7 +132,7 @@ const todoList = (state = [], action) => {
     case 'SET_TAGS':
       return {
         ...state,
-        availableTags: action.tags
+        availableTags: action.payload.tags
       };
     case 'SET_SEARCH_KEYWORDS':
       return {
@@ -147,7 +147,7 @@ const todoList = (state = [], action) => {
     case 'SET_TODO_TO_EDIT':
       return {
         ...state,
-        todoToEdit: action.todoId
+        todoToEdit: action.payload.todoId
       };
     case 'TOGGLE_POPUP':
       return {
@@ -157,7 +157,7 @@ const todoList = (state = [], action) => {
     case 'SET_POPUP_EDIT_TITLE':
       return {
         ...state,
-        popUpEditTitle: action.title
+        popUpEditTitle: action.payload.title
       };
     case 'TOGGLE_ADD_FORM':
       return {
@@ -191,7 +191,7 @@ const todoList = (state = [], action) => {
       }
     case 'RESET_STORE':
       console.log('reset store from todoList reducer');
-      return action.defaultState.todoList;
+      return action.payload.defaultState.todoList;
     case 'MOVE_TODO':
       return {
         ...state,

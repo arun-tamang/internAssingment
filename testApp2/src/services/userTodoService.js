@@ -60,6 +60,7 @@ export async function searchUserTodo(user_id, queries) {
       withRelated: ['tags']
     })
     .then(userTodo => {
+      // console.log('userTodo is ', userTodo);
       if(!userTodo) {
         console.log('query doesn\'t match');
         userTodo = 'no todo matches your query';
@@ -80,6 +81,7 @@ export function createUserTodo(user_todo) {
 
 export function updateUserTodo(id, user_todo) {
   // this actually adds new user_todo row and doesn't update any row in table.
+  console.log('from update', user_todo);
   let tagIds = user_todo.tagIds;  //tagIds is array
   return new UserTodo()
     .save({ name: user_todo.name, user_id: id })
@@ -100,22 +102,20 @@ export function editUserTodo(todoId, newTitle) {
     });
 }
 
-function getTagIds(arr) {
-  let tags = [];
-  for (let i = 0; i < arr.length; i++) {
-    tags[i] = arr[i].attributes.tagId;
-  }
-  return tags;
-}
+// function getTagIds(arr) {
+//   console.log('arr from getTagIds', arr);
+//   let tags = [];
+//   for (let i = 0; i < arr.length; i++) {
+//     tags[i] = arr[i].attributes.tagId;
+//   }
+//   return tags;
+// }
 
 export async function deleteUserTodo(userId, todoId) {
   // currently userId is not used for validation
   // get array of tags of todo from linkerTable
   console.log('todoId to destroy', todoId)
   let tags = await linkerService.getTags(todoId).then(data => {return data});
-  tags = getTagIds(tags.models);
-  console.log(tags);
-  // let linkerResponse = linkerService.removeLinks(todoId);
   for(let i = 0; i < tags.length; i++) {
     linkerService.removeLink(todoId);
   }

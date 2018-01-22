@@ -23,27 +23,28 @@ const App = (props) => {
         return myAxios(lastConfig);
       })
       .catch((error) => {
-        console.log('from refreshAndRepeat', error);
-        handleLogOut();
+        if(error.response.status === 404) {
+          handleLogOut();
+        }
       });
   }
 
   const addInterceptor = () => {
     console.log('now activating interceptor');
     myAxios.interceptors.response.use((response) => {
-      if (response.data.acsTokenSuccess === false) {
-        console.log('access token needs to be refreshed');
-        let lastConfig = response.config;
-        return refreshAndRepeat(lastConfig);
-      }
       return response;
     }, (error) => {
+      if (error.response.status === 401) {
+        console.log('access token has to be refreshed');
+        let lastConfig = error.response.config;
+        return refreshAndRepeat(lastConfig);
+      }
       return Promise.reject(error);
     });
   }
 
-  const handleLogIn = (event, loginDetails) => {
-    props.login(loginDetails || props.logInDetails)
+  const handleLogIn = async (event, loginDetails) => {
+    await props.login(loginDetails || props.logInDetails)
       .then((data) => {
         if (data) {
           localStorage.setItem(
@@ -58,7 +59,7 @@ const App = (props) => {
             })
           );
           setTokenInHeader(data.tokens.accessToken);
-          addInterceptor();
+          // addInterceptor();
         } else {
           console.log('login unsuccessful');
         }
@@ -82,20 +83,14 @@ const App = (props) => {
   };
 
   const handleRegister = (values) => {
-    // console.log(values);
     props.register(values)
       .then((response) => {
         if (response) {
-          console.log(response.data.data.email);
-          console.log(response.data.data.password);
           let { email } = response.data.data;
           let { password } = response.data.data;
           props.setLoginEmail(email);
-          let a = props.setLoginPassword(password);
-          console.log('a from setpassword', a);
-          console.log('now calling handleLogin');
-          console.log('from register',props.logInDetails);
-          handleLogIn(null, {email, password});
+          props.setLoginPassword(password);
+          handleLogIn(null, { email, password });
         }
       })
       .catch((err) => {
@@ -107,9 +102,9 @@ const App = (props) => {
     if (props.user.authenticated === true) {
       addInterceptor();
       props.fetchTodos(props.user.userDetails.id, 1)
-      .then(() => {
-        props.fetchTags(props.user.userDetails.id);
-      });
+        .then(() => {
+          props.fetchTags(props.user.userDetails.id);
+        });
     }
   }
 
@@ -122,16 +117,16 @@ const App = (props) => {
         <Route
           path='/login'
           render={routerProps =>
-          Login(
-            routerProps,
-            {
-              setLoginEmail: props.setLoginEmail,
-              setLoginPassword: props.setLoginPassword,
-              authenticated: props.user.authenticated,
-              handleLogClick: handleLogIn
-            }
-          )
-        }
+            Login(
+              routerProps,
+              {
+                setLoginEmail: props.setLoginEmail,
+                setLoginPassword: props.setLoginPassword,
+                authenticated: props.user.authenticated,
+                handleLogClick: handleLogIn
+              }
+            )
+          }
         />
         <Route
           path='/register'
@@ -150,15 +145,15 @@ const App = (props) => {
               props.user.authenticated ? (
                 <TodoListContainer />
               ) : (
-                <Redirect to={{
-                  pathname: '/login',
-                  state: { from: routerProps.location }
-                }}
-                />
-              )
+                  <Redirect to={{
+                    pathname: '/login',
+                    state: { from: routerProps.location }
+                  }}
+                  />
+                )
             );
           }
-        }
+          }
         />
       </div>
     </Router>

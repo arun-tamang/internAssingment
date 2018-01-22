@@ -1,4 +1,4 @@
-const registerDetails = (state=[], action) => {
+const registerDetails = (state = [], action) => {
   // console.log(state, action);
   return state;
 }

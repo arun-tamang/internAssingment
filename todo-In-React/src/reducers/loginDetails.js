@@ -1,13 +1,11 @@
 const logInDetails = (state = [], action) => {
-  // console.log(state, action);
   switch (action.type) {
     case 'SET_LOGIN_EMAIL':
-      // console.log(action.emailEvent.target.value);
-      return { ...state, email: action.email };
+      return { ...state, email: action.payload.email };
     case 'SET_LOGIN_PASSWORD':
-      return { ...state, password: action.password };
+      return { ...state, password: action.payload.password };
     case 'RESET_STORE':
-      return action.defaultState.logInDetails
+      return action.payload.defaultState.logInDetails
     default:
       return state;
   }
