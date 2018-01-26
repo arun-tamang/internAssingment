@@ -30,12 +30,11 @@ const App = (props) => {
   }
 
   const addInterceptor = () => {
-    console.log('now activating interceptor');
     myAxios.interceptors.response.use((response) => {
       return response;
     }, (error) => {
       if (error.response.status === 401) {
-        console.log('access token has to be refreshed');
+        // access token has to be refreshed.
         let lastConfig = error.response.config;
         return refreshAndRepeat(lastConfig);
       }
@@ -58,7 +57,6 @@ const App = (props) => {
               authenticated: true
             })
           );
-          setTokenInHeader(data.tokens.accessToken);
           // addInterceptor();
         } else {
           console.log('login unsuccessful');
@@ -106,6 +104,9 @@ const App = (props) => {
           props.fetchTags(props.user.userDetails.id);
         });
     }
+    // note that the actions dispatched here are those that modify props of TodoList but not of
+    // app itself and so it is fine. However if the actions dispatched were to modify the props passed
+    // to the app, this would cause an infinite loop whenever authenticated is true;
   }
 
   checkAuthentication();

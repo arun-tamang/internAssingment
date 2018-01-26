@@ -62,7 +62,7 @@ export function login(userInfo) {
       (response) => {
         let { tokens } = response.data;
         let userDetails = response.data.userInfo;
-        SERVICES.setTokenInHeader(tokens);
+        SERVICES.setTokenInHeader(tokens.accessToken);
         dispatch(receiveTokensAndUserDetails(tokens, userDetails));
         dispatch(setAuthentication(true));
         return { tokens, userDetails };
@@ -77,10 +77,8 @@ export function login(userInfo) {
 
 // register
 export function register(newUserDetails) {
-  console.log('from register', newUserDetails);
   return (dispatch) => {
     return SERVICES.register(newUserDetails).then((response) => {
-      console.log(response);
       return response;
     });
   };

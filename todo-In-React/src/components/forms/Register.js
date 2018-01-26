@@ -3,7 +3,6 @@ import { Field, reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 
 const Register = (props) => {
-  // console.log('from registser,', props.handleSubmit);
   const { handleSubmit } = props;
   return props.authenticated ? (
     <Redirect to='/' />

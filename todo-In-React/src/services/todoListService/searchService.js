@@ -11,6 +11,7 @@ export function searchTodo(searchInput, userId) {
       }
     })
     .then((response) => {
+      console.log('from search', response.data);
       return response;
     })
     .catch((err) => console.log(err));

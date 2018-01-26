@@ -39,8 +39,6 @@ const setSearchTags = (state, action) => {
     tagCopy.splice(index, 1);
   }
   stateCopy.tags = tagCopy;
-  // console.log('stateCopy', stateCopy);
-  // console.log('state', state);
   return stateCopy;
 };
 
@@ -190,7 +188,6 @@ const todoList = (state = [], action) => {
         todoToAdd: resetTodoToAdd({...state.todoToAdd})
       }
     case 'RESET_STORE':
-      console.log('reset store from todoList reducer');
       return action.payload.defaultState.todoList;
     case 'MOVE_TODO':
       return {

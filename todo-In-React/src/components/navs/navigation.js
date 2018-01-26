@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { logout } from '../../services/userService/logoutService';
 
 const NavBar = (props) => {
-  // console.log(props);
 
   const handleLogOut = () => {
     logout()
